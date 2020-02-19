@@ -8,12 +8,12 @@ import '../App.css';
 class NavBar extends Component {
     constructor(props) {
         super(props);
-        this.handleLogout = this.handleLogout.bind(this);
+        //this.handleLogout = this.handleLogout.bind(this);
     }
     //handle logout to destroy the cookie
-    handleLogout = () => {
-        cookie.remove('cookie', { path: '/' })
-    }
+    // handleLogout = () => {
+    //     cookie.remove('cookie', { path: '/' })
+    // }
     render() {
         //if Cookie is set render Logout Button
         // let navLogin = null;
@@ -42,7 +42,7 @@ class NavBar extends Component {
         return (
             <div>
                 {redirectVar}
-                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "teal" }}>
+                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#0d1463" }}>
                     <div class="container-fluid">
                         <div class="navbar-header">
                             <b class="navbar-brand" style={{ color: "white" }}>Handshake</b>
