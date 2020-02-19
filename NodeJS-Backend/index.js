@@ -4,12 +4,25 @@ let cookieParser = require('cookie-parser');
 var logger = require('tracer').colorConsole()
 var _ = require('lodash');
 var createError = require('http-errors')
+var cors = require('cors');
 
 var pool = require('./db/connection')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+//TODO - Change to a efficient CORS
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+    res.setHeader('Cache-Control', 'no-cache');
+    next();
+});
 
 app.get('/healthcheck', (request, response) => {
     console.log("Health Check")
@@ -18,13 +31,14 @@ app.get('/healthcheck', (request, response) => {
     })
 })
 
-app.get('/login', async (request, response) => {
+app.get('/signin', async (request, response) => {
     try {
         const email = request.query.email;
         const password = request.query.password;
         const entity = request.query.persona;
-        var query = 'SELECT * FROM ' + entity + ' where email =\'' + email + '\' and password=\'' + password + '\'';
-        var rows = await pool.query(query);
+        var query = 'SELECT * from ?? where email = ? and password = ?';
+        //var query = 'SELECT * FROM ' + entity + ' where email =\'' + email + '\' and password=\'' + password + '\'';
+        var rows = await pool.query(query, [entity, email, password]);
         logger.debug("Response from DB:" + JSON.stringify(rows))
         if (_.isEmpty(rows)) {
             throw createError(401, "Invalid Credentials")
