@@ -5,6 +5,7 @@ var logger = require('tracer').colorConsole()
 var _ = require('lodash');
 var createError = require('http-errors')
 var cors = require('cors');
+const uuid = require('shortid');
 
 var pool = require('./db/connection')
 
@@ -66,21 +67,66 @@ app.post('/signup', async (request, response) => {
             throw createError(409, "Email Id already registered. Try logging in")
         }
         if (entity === 'company') {
-            var companySignupQuery = 'INSERT INTO company(name, email, password, location) values(\'' + name + '\',\'' + email + '\',\'' + password + '\',\'' + request.body.location + '\')';
-            await pool.query(companySignupQuery);
+            //var companySignupQuery = 'INSERT INTO company(id,name, email, password, location) values(\'' + name + '\',\'' + email + '\',\'' + password + '\',\'' + request.body.location + '\')';
+            var companySignupQuery = 'INSERT INTO company(id,name, email, password, location) values(?,?,?,?,?)';
+            await pool.query(companySignupQuery, [uuid.generate(), name, email, password, request.body.location]);
         }
         if (entity === 'student') {
-            var studentSignupQuery = 'INSERT INTO student(name, email, password, college) values(\'' + name + '\',\'' + email + '\',\'' + password + '\',\'' + request.body.college + '\')';
-            await pool.query(studentSignupQuery);
+            //var studentSignupQuery = 'INSERT INTO student(id,name, email, password, college) values(\'' + name + '\',\'' + email + '\',\'' + password + '\',\'' + request.body.college + '\')';
+            var studentSignupQuery = 'INSERT INTO student(id,name, email, password, college) values(?,?,?,?,?)';
+            await pool.query(studentSignupQuery, [uuid.generate(), name, email, password, request.body.college]);
         }
         logger.info(JSON.stringify(rows))
         return response.status(200).json({ "message": "Signup Successful" });
     } catch (error) {
+        logger.error(JSON.stringify(error))
         let message = error.message ? error.message : 'Error Ocurred at Server'
         let code = error.statusCode ? error.statusCode : 500;
         return response.status(code).json({ "message": message }).status(code)
     }
 })
+
+app.get('/company/:id/jobs', async (request, response) => {
+    try {
+        var query = 'SELECT id,title,posting_date,deadline,location,salary,description,category,\'View Applicants\' as applicants from jobs where company_id=?';
+        var rows = await pool.query(query, [request.params.id]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.post('/company/:id/jobs', async (request, response) => {
+    try {
+        var query = 'insert into jobs(id,title,posting_date,deadline,location,salary,description,category,company_id) values(?,?,?,?,?,?,?,?,?)';
+        var rows = await pool.query(query, [uuid.generate(), request.body.title, request.body.posting_date, request.body.deadline, request.body.location, request.body.salary, request.body.description, request.body.category, request.params.id]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(request.body).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/company/:companyId/job/:jobId/applicants', async (request, response) => {
+    try {
+        var query = 'SELECT student.name as student_name, student.id as student_id, student.college as student_college,applications.id as application_id, applications.applied_on as applied_on,applications.status as status,\'Edit\' as edit from student,jobs,company,applications where jobs.id=? and company.id=? and applications.student_id=student.id and applications.company_id=? and applications.job_id=?';
+        var rows = await pool.query(query, [request.params.jobId, request.params.companyId,request.params.companyId,request.params.jobId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching applicants';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
 
 app.listen(8080, function () {
     console.log("App listening on port 8080");

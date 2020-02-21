@@ -8,54 +8,47 @@ import '../App.css';
 class NavBar extends Component {
     constructor(props) {
         super(props);
-        //this.handleLogout = this.handleLogout.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
     }
     //handle logout to destroy the cookie
-    // handleLogout = () => {
-    //     cookie.remove('cookie', { path: '/' })
-    // }
+    handleLogout = () => {
+        sessionStorage.removeItem("persona");
+        sessionStorage.removeItem("name");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("id");
+    }
     render() {
-        //if Cookie is set render Logout Button
-        // let navLogin = null;
-        // if (cookie.load('cookie')) {
-        //     console.log("Able to read cookie");
-        //     navLogin = (
-        //         <ul class="nav navbar-nav navbar-right">
-        //             <li><Link to="/" onClick={this.handleLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li>
-        //         </ul>
-        //     );
-        // } else {
-        //     //Else display login button
-        //     console.log("Not Able to read cookie");
-        //     navLogin = (
-        //         <ul class="nav navbar-nav navbar-right">
-        //             <li><Link to="/login"><span class="glyphicon glyphicon-log-in"></span> Login</Link></li>
-        //         </ul>
-        //     )
-        // }
-        let redirectVar = null;
-        if (cookie.load('cookie')) {
-            redirectVar = <Redirect to="/" />
+        let navBar = null;
+        if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
+            navBar = (
+                <ul class="nav navbar-nav navbar-right">
+                    <li><Link to="/profile" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to="/jobs" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
+                    <li><Link to="/events" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
+                    <li><Link to="/signin" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
+                    <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "white" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
+                </ul>
+            )
         } else {
-            redirectVar = <Redirect to="/signin" />
+            navBar = (
+                <ul class="nav navbar-nav navbar-right">
+                    <li><Link to="/signin" style={{ color: "white" }}><span class="glyphicon glyphicon-log-in"></span> LogIn</Link></li>
+                    <li><Link to="/signup" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span> SignUp</Link></li>
+                </ul>
+            )
         }
+        let redirectVar = <Redirect to="/signin" />
         return (
             <div>
                 {redirectVar}
-                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#0d1463" }}>
+                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#0d1463", borderRadius:"0px"}}>
                     <div class="container-fluid">
                         <div class="navbar-header">
                             <b class="navbar-brand" style={{ color: "white" }}>Handshake</b>
                         </div>
                         <ul class="nav navbar-nav">
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><Link to="/home" className="ban" style={{ color: "white" }}>Jobs</Link></li>
-                            <li><Link to="/create" style={{ color: "white" }}>Events</Link></li>
-                            <li><Link to="/delete" style={{ color: "white" }}>Students</Link></li>
-                            <li><Link to="/signin" style={{ color: "white" }}><span class="glyphicon glyphicon-log-in"></span> LogIn</Link></li>
-                            <li><Link to="/signup" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span> SignUp</Link></li>
-                        </ul>
+                        {navBar}
                     </div>
                 </nav>
             </div>

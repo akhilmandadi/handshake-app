@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class SignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            invalidLogin: false,
-            persona: "student",
+            invalidCredentials: '',
+            persona: "company",
             email: "",
             password: "",
             invalidEmail: false
@@ -27,27 +29,26 @@ class SignIn extends Component {
     authenticateUser = (event) => {
         event.preventDefault();
         let url = 'http://localhost:8080/signin?persona=' + this.state.persona + '&email=' + this.state.email + '&password=' + this.state.password;
-        console.log(url)
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
-                console.log("Status Code : ", response.status);
                 if (response.status === 200) {
+                    sessionStorage.setItem("persona", this.state.persona);
+                    sessionStorage.setItem("email", this.state.email);
+                    sessionStorage.setItem("id", response.data.id);
+                    sessionStorage.setItem("name", response.data.name);
                     this.setState({
-                        authFlag: true
+                        invalidCredentials: false
                     })
                 } else {
                     this.setState({
-                        authFlag: false,
-                        error: true
+                        invalidCredentials: true
                     })
                 }
             })
             .catch((error) => {
-                console.log("00")
                 this.setState({
-                    authFlag: false,
-                    error: true
+                    invalidCredentials: true
                 })
             });;
     }
@@ -78,9 +79,15 @@ class SignIn extends Component {
     }
 
     render() {
+        let home = null;
+        //if (this.state.invalidCredentials === false) {
+        if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
+            home = <Redirect to="/jobs" />
+        }
         return (
             <div>
-                <div class="container" style={{ width: "25%", border: "0px solid rgb(9, 3, 12)" }}>
+                {home}
+                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)" }}>
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">
@@ -88,15 +95,15 @@ class SignIn extends Component {
                             </div>
                             <div>
                                 <div class="radio-inline">
-                                    <input type="radio" style={{ color: "black" }} value="student" name="persona" defaultChecked onChange={this.changePersona} /><p>I'm a Student</p>
+                                    <input type="radio" style={{ color: "black" }} value="student" name="persona"  onChange={this.changePersona} /><p>I'm a Student</p>
                                 </div>
                                 <div class="radio-inline">
-                                    <input type="radio" value="company" name="persona" onChange={this.changePersona} /><p>I'm a Company</p>
+                                    <input type="radio" value="company" name="persona" onChange={this.changePersona} defaultChecked /><p>I'm a Company</p>
                                 </div>
                             </div>
                             <form className="form" onSubmit={this.authenticateUser}>
                                 <div class="form-group">
-                                    <input type="email" onChange={this.emailChangeHandler} style={{ backgroundColor: "" }} class="form-control" name="email" placeholder="Email Id" required />
+                                    <input type="email" onChange={this.emailChangeHandler} style={{ backgroundColor: "" }} class="form-control" name="emailId" placeholder="Email Id" required />
                                 </div>
                                 <div class="form-group" style={{ "alignItems": "center" }}>
                                     {this.state.invalidEmail ? <span style={{ color: "red", "font-weight": "bold", "textAlign": "center" }}>Invalid Email Id. Please check</span> : ''}
@@ -105,11 +112,14 @@ class SignIn extends Component {
                                     <input type="password" onChange={this.passwordChangeHandler} class="form-control" name="password" placeholder="Password" required />
                                 </div>
                                 <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.invalidLogin ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>Invalid Username or Password</span> : ''}
+                                    {this.state.invalidCredentials ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>Invalid Username or Password</span> : ''}
                                 </div>
-
                                 <div style={{ textAlign: "center" }}>
                                     <button disabled={this.validateCredentials()} class="btn btn-success" style={{ "width": "100%" }}>Login</button>
+                                </div>
+                                <br />
+                                <div style={{ textAlign: "center" }}>
+                                    <Link to="/signup">Not a User? Sign Up</Link>
                                 </div>
                             </form>
                             <br />
