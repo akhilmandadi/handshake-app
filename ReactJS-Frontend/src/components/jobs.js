@@ -13,6 +13,7 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import CreateJob from "./createJob"
 import { Redirect } from 'react-router';
+import Button from '@material-ui/core/Button';
 
 const columns = [
     { id: 'title', label: 'Title', minWidth: 70 },
@@ -41,25 +42,26 @@ class Jobs extends Component {
     }
 
     componentDidMount() {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
-        axios.defaults.withCredentials = true;
-        axios.get(url)
-            .then(response => {
-                if (response.status === 200) {
-                    this.setState({
-                        jobs: response.data
-                    })
-                } else {
-                    this.setState({
-                        jobs: []
-                    })
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    jobs: []
-                })
-            });
+        this.updateJobs();
+        // let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
+        // axios.defaults.withCredentials = true;
+        // axios.get(url)
+        //     .then(response => {
+        //         if (response.status === 200) {
+        //             this.setState({
+        //                 jobs: response.data
+        //             })
+        //         } else {
+        //             this.setState({
+        //                 jobs: []
+        //             })
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         this.setState({
+        //             jobs: []
+        //         })
+        //     });
     }
     updateJobs = () => {
         let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
@@ -101,10 +103,9 @@ class Jobs extends Component {
         })
     }
 
-    viewApplicants = event => {
-        console.log(event.target.id)
+    viewApplicants = id => {
         this.setState({
-            jobId: event.target.id
+            jobId: id
         })
 
     }
@@ -114,7 +115,6 @@ class Jobs extends Component {
         else createDialog = null;
 
         let jobApplicants = null;
-        console.log("qqq" + this.state.jobId)
         if (this.state.jobId !== "") { const url = '/job/' + this.state.jobId + '/applications'; jobApplicants = <Redirect to={url} /> }
         let errorBanner = null;
         if (this.state.jobs.length === 0) errorBanner = (<b>No Jobs Posted Currently</b>)
@@ -153,8 +153,8 @@ class Jobs extends Component {
                                                 if (column.id === "deadline" || column.id === "posting_date") value = moment(value).format("dddd, MMMM Do YYYY");
                                                 if (column.id === "applicants") {
                                                     return (
-                                                        <TableCell style={{ fontSize: "10px" }} onClick={this.viewApplicants} id={row["id"]}>
-                                                            {value}
+                                                        <TableCell style={{ fontSize: "10px" }} onClick={()=>this.viewApplicants(row["id"])} id={row["id"]}>
+                                                            <Button color="primary">{value}</Button>
                                                         </TableCell>
                                                     )
                                                 }

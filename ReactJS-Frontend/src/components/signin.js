@@ -82,7 +82,7 @@ class SignIn extends Component {
         let home = null;
         //if (this.state.invalidCredentials === false) {
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
-            home = <Redirect to="/jobs" />
+            home = <Redirect to="/students" />
         }
         return (
             <div>

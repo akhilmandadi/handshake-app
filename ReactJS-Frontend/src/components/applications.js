@@ -10,14 +10,23 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Fab from "@material-ui/core/Fab";
-import CreateJob from "./createJob"
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Link } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 
 const columns = [
-    { id: 'student_name', label: 'Student Name', minWidth: 70 },
-    { id: 'student_college', label: 'College', minWidth: 100 },
-    { id: 'applied_on', label: 'Applied On', minWidth: 100 },
+    { id: 'student_name', label: 'Student Name', minWidth: 100 },
+    { id: 'student_college', label: 'College', minWidth: 120 },
+    { id: 'applied_on', label: 'Applied On', minWidth: 120 },
     { id: 'status', label: 'Status', minWidth: 100 },
     { id: 'edit', label: '', minWidth: 100 }
 ];
@@ -29,34 +38,61 @@ class Applications extends Component {
             applications: [],
             page: 0,
             rowsPerPage: 5,
-            enableCreate: false
+            enableCreate: false,
+            jobInfo: {},
+            isEditDialogOpen: false,
+            currentApplicationId: "",
+            statusesToShow: []
         }
-        this.viewApplicants = this.viewApplicants.bind(this);
+        this.handleChangePage = this.handleChangePage.bind(this);
+        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+        this.updateStatusOfApplication = this.updateStatusOfApplication.bind(this);
         this.toggleCreate = this.toggleCreate.bind(this);
+        this.enableEdit = this.enableEdit.bind(this);
+        this.handleEditDialogClose = this.handleEditDialogClose.bind(this);
     }
 
     componentDidMount() {
+        this.updateJobs();
         const { match: { params } } = this.props;
-        console.log(params.jobId)
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
-        console.log(url)
+        // let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
+        // axios.defaults.withCredentials = true;
+        // axios.get(url)
+        //     .then(response => {
+        //         if (response.status === 200) {
+        //             console.log(response.data)
+        //             this.setState({
+        //                 applications: response.data
+        //             })
+        //         } else {
+        //             this.setState({
+        //                 applications: []
+        //             })
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         this.setState({
+        //             applications: []
+        //         })
+        //     });
+
         axios.defaults.withCredentials = true;
-        axios.get(url)
+        axios.get('http://localhost:8080/job/' + params.jobId)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
                     this.setState({
-                        applications: response.data
+                        jobInfo: response.data[0]
                     })
                 } else {
                     this.setState({
-                        applications: []
+                        jobInfo: {}
                     })
                 }
             })
             .catch((error) => {
                 this.setState({
-                    applications: []
+                    jobInfo: {}
                 })
             });
     }
@@ -79,24 +115,121 @@ class Applications extends Component {
         })
     }
 
-    viewApplicants = event => {
-        console.log(event.target.id)
+    updateStatusOfApplication = (status) => {
+        console.log("updateStateOfApplication");
+        console.log(this.state.currentApplicationId)
+        console.log(status)
+        this.setState({
+            isEditDialogOpen: false
+        })
+        axios.put('http://localhost:8080/applications/' + this.state.currentApplicationId, { "status": status })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    this.updateJobs();
+                } else {
+                    this.setState({
+                        //loader
+                    })
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    //loader
+                })
+            });
+    }
+
+    updateJobs = () => {
+        const { match: { params } } = this.props;
+        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
+        axios.defaults.withCredentials = true;
+        axios.get(url)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    console.log("updated")
+                    this.setState({
+                        applications: response.data
+                    })
+                } else {
+                    this.setState({
+                        applications: []
+                    })
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    applications: []
+                })
+            });
+    }
+
+    enableEdit = (id, status) => {
+        console.log("enableEdit")
+        console.log(id)
+        console.log(status)
+        this.setState({
+            currentApplicationId: id,
+            statusesToShow: ["Pending", "Reviewed", "Declined"].filter(x => ![status].includes(x)),
+            isEditDialogOpen: true
+        })
+    }
+
+    handleEditDialogClose = () => {
+        console.log("handleEditDialogClose")
+        this.setState({
+            currentApplicationId: "",
+            statusesToShow: [],
+            isEditDialogOpen: false
+        })
     }
     render() {
         let createDialog = null;
         let errorBanner = null;
         if (this.state.applications.length === 0) errorBanner = (<b>No Applicants for this Job</b>)
+        let jobInfoTab = null;
+        if (this.state.jobInfo !== {}) {
+            jobInfoTab = (
+                <div style={{ backgroundColor: "rgb(225, 225, 225)", borderRadius: "2.5px", padding: "20px" }}>
+                    <Grid container spacing={3}>
+                        <div className="container" style={{ width: "30%" }}><b>Title:</b> {this.state.jobInfo.title}</div>
+                        <div className="container" style={{ width: "30%" }}><b>Salary:</b> {this.state.jobInfo.salary}</div>
+                        <div className="container" style={{ width: "40%" }}><b>Deadline:</b> {moment(this.state.jobInfo.deadline).format("MMMM Do YYYY")}</div>
+                        <div className="container" style={{ width: "30%" }}><b>Category:</b> {this.state.jobInfo.category}</div>
+                        <div className="container" style={{ width: "30%" }}><b>Location:</b> {this.state.jobInfo.location}</div>
+                        <div className="container" style={{ width: "40%" }}><b>Posted On: </b> {moment(this.state.jobInfo.posting_date).format("MMMM Do YYYY")}</div>
+                    </Grid>
+                </div>
+            )
+        }
         return (
             <div className="container" style={{ width: "85%", alignItems: "center" }}>
+                <Dialog onClose={this.handleEditDialogClose} aria-labelledby="simple-dialog-title" open={this.state.isEditDialogOpen}>
+                    <DialogTitle id="simple-dialog-title">Update Status To</DialogTitle>
+                    <List>
+                        <Divider />
+                        {this.state.statusesToShow.map(status => (
+                            <ListItemAvatar>
+                                <ListItem style={{ textAlign: "center" }} button onClick={() => this.updateStatusOfApplication(status)} key={status} id={status}>
+                                    <ListItemText primary={status} />
+                                </ListItem><Divider /></ListItemAvatar>
+                        ))}
+                    </List>
+                    <div style={{textAlign:"center"}}>
+                    <CancelPresentationIcon fontSize="large" style={{backgroundColor:"red"}} onClick={this.handleEditDialogClose} />
+                    </div>
+                </Dialog>
                 {createDialog}
                 <div>
-                    <Link to="/signin">
+                    <Link to="/jobs">
                         <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
-                            <ArrowBackIcon fontSize="large"/><b style={{ fontSize: "10px" }}>Back to Jobs</b>
+                            <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}>Back to Jobs</b>
                         </Fab>
                     </Link>
                     <br /><br />
                 </div>
+                {jobInfoTab}<br />
                 <Paper style={{ width: "100%", align: "center", backgroundColor: "rgb(242, 242, 242)" }}>
                     <TableContainer style={{ maxHeight: "80%" }}>
                         <Table stickyHeader aria-label="sticky table">
@@ -106,7 +239,7 @@ class Applications extends Component {
                                         <TableCell
                                             key={column.id}
                                             align={column.align}
-                                            style={{ minWidth: column.minWidth, backgroundColor: "rgb(225, 225, 225)", fontWeight: "bold", fontSize: "13px" }}
+                                            style={{ minWidth: column.minWidth, backgroundColor: "rgb(225, 225, 225)", fontWeight: "bold", textAlign: "center", fontSize: "13px" }}
                                         >
                                             {column.label}
                                         </TableCell>
@@ -122,13 +255,19 @@ class Applications extends Component {
                                                 if (column.id === "applied_on") value = moment(value).format("dddd, MMMM Do YYYY");
                                                 if (column.id === "edit") {
                                                     return (
-                                                        <TableCell style={{ fontSize: "10px" }} onClick={this.viewApplicants} id={row["id"]}>
-                                                            {value}
+                                                        <TableCell style={{ fontSize: "10px", textAlign: "center" }} onClick={() => this.enableEdit(row["application_id"], row["status"])} id={row["application_id"]}>
+                                                            <Button color="secondary">{value}</Button>
                                                         </TableCell>
                                                     )
                                                 }
+                                                if (column.id === "student_name") {
+                                                    return (<TableCell key={column.id} align={column.align} style={{ fontSize: "10px", textAlign: "center" }}>
+                                                        <Link to={'/students/' + row["student_id"]}><b>{value.toUpperCase()}</b></Link>
+                                                    </TableCell>
+                                                    )
+                                                }
                                                 return (
-                                                    <TableCell key={column.id} align={column.align} style={{ fontSize: "10px" }}>
+                                                    <TableCell key={column.id} align={column.align} style={{ fontSize: "10px", textAlign: "center" }}>
                                                         {value}
                                                     </TableCell>
                                                 );
