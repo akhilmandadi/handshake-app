@@ -117,7 +117,7 @@ app.post('/company/:id/jobs', async (request, response) => {
 app.get('/company/:companyId/job/:jobId/applicants', async (request, response) => {
     try {
         var query = 'SELECT student.name as student_name, student.id as student_id, student.college as student_college,applications.id as application_id, applications.applied_on as applied_on,applications.status as status,\'Edit\' as edit from student,jobs,company,applications where jobs.id=? and company.id=? and applications.student_id=student.id and applications.company_id=? and applications.job_id=?';
-        var rows = await pool.query(query, [request.params.jobId, request.params.companyId,request.params.companyId,request.params.jobId]);
+        var rows = await pool.query(query, [request.params.jobId, request.params.companyId, request.params.companyId, request.params.jobId]);
         logger.debug("Response from DB:" + JSON.stringify(rows))
         return response.json(rows).status(200);
     } catch (ex) {
@@ -127,6 +127,80 @@ app.get('/company/:companyId/job/:jobId/applicants', async (request, response) =
         return response.status(code).json({ "message": message })
     }
 });
+
+app.put('/applications/:applicationId', async (request, response) => {
+    try {
+        var query = 'update applications set status=? where id=?'
+        var rows = await pool.query(query, [request.body.status, request.params.applicationId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json({ "message": "Update Success" }).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while Updating applicantion Status';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/job/:jobId', async (request, response) => {
+    try {
+        var query = 'SELECT * from jobs where id=?';
+        var rows = await pool.query(query, [request.params.jobId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/students', async (request, response) => {
+    try {
+        console.log(request.query)
+        var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student';
+        if (!_.isEmpty(request.query)) {
+            var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=\'' + request.query.id + '\'';
+        }
+        var rows = await pool.query(query);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching students details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/student/:studentId/applications', async (request, response) => {
+    try {
+        var query = 'select c.name,j.location,j.title,j.deadline,a.status,a.id,a.applied_on from applications a left join jobs j on j.id=a.job_id left join company c on c.id=a.company_id where a.student_id=?';
+        var rows = await pool.query(query, [request.params.studentId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching applications details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/jobs', async (request, response) => {
+    try {
+        var query = 'select j.id,j.title,j.posting_date,j.deadline, j.location,j.salary,j.description,j.category,j.company_id,c.name as company_name from jobs j,company c where c.id=j.company_id;'
+        var rows = await pool.query(query);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
 
 app.listen(8080, function () {
     console.log("App listening on port 8080");

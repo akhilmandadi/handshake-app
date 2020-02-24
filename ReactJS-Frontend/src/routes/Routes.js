@@ -6,6 +6,11 @@ import NavBar from "../components/navbar";
 import Dashboard from "../components/dashboard";
 import Jobs from "../components/jobs";
 import Applications from "../components/applications";
+import Students from "../components/students";
+import StudentProfile from "../components/studentProfile";
+
+import StudentApplications from "../components/student/applications";
+import SearchJobs from "../components/student/searchJobs";
 
 class Routes extends Component {
     render() {
@@ -15,8 +20,13 @@ class Routes extends Component {
                 <Route path="/signin" component={SignIn} />
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/signup" component={SignUp} />
-                <Route path="/jobs" component={Jobs} />
+                <Route path="/company/jobs" component={Jobs} />
                 <Route path="/job/:jobId/applications" exact component={Applications} />
+                <Route path="/students" exact component={Students} />
+                <Route path="/students/:id" exact component={StudentProfile} />
+
+                <Route path="/student/:id/applications" exact component={StudentApplications} />
+                <Route path="/jobs" exact component={SearchJobs} />
             </div>
         )
     }

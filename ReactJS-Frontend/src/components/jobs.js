@@ -13,6 +13,8 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import CreateJob from "./createJob"
 import { Redirect } from 'react-router';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const columns = [
     { id: 'title', label: 'Title', minWidth: 70 },
@@ -41,25 +43,26 @@ class Jobs extends Component {
     }
 
     componentDidMount() {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
-        axios.defaults.withCredentials = true;
-        axios.get(url)
-            .then(response => {
-                if (response.status === 200) {
-                    this.setState({
-                        jobs: response.data
-                    })
-                } else {
-                    this.setState({
-                        jobs: []
-                    })
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    jobs: []
-                })
-            });
+        this.updateJobs();
+        // let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
+        // axios.defaults.withCredentials = true;
+        // axios.get(url)
+        //     .then(response => {
+        //         if (response.status === 200) {
+        //             this.setState({
+        //                 jobs: response.data
+        //             })
+        //         } else {
+        //             this.setState({
+        //                 jobs: []
+        //             })
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         this.setState({
+        //             jobs: []
+        //         })
+        //     });
     }
     updateJobs = () => {
         let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
@@ -101,10 +104,9 @@ class Jobs extends Component {
         })
     }
 
-    viewApplicants = event => {
-        console.log(event.target.id)
+    viewApplicants = id => {
         this.setState({
-            jobId: event.target.id
+            jobId: id
         })
 
     }
@@ -114,12 +116,11 @@ class Jobs extends Component {
         else createDialog = null;
 
         let jobApplicants = null;
-        console.log("qqq" + this.state.jobId)
         if (this.state.jobId !== "") { const url = '/job/' + this.state.jobId + '/applications'; jobApplicants = <Redirect to={url} /> }
         let errorBanner = null;
         if (this.state.jobs.length === 0) errorBanner = (<b>No Jobs Posted Currently</b>)
         return (
-            <div className="container" style={{ width: "85%", align: "center" }}>
+            <div className="container" style={{ width: "85%", align: "center" ,marginTop:"20px"}}>
                 {createDialog}
                 {jobApplicants}
                 <div>
@@ -128,7 +129,7 @@ class Jobs extends Component {
                     </Fab>
                     <br /><br />
                 </div>
-                <Paper style={{ width: "100%", align: "center", backgroundColor: "rgb(242, 242, 242)" }}>
+                <Paper style={{ width: "100%", align: "center" }}>
                     <TableContainer style={{ maxHeight: "80%" }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -153,8 +154,8 @@ class Jobs extends Component {
                                                 if (column.id === "deadline" || column.id === "posting_date") value = moment(value).format("dddd, MMMM Do YYYY");
                                                 if (column.id === "applicants") {
                                                     return (
-                                                        <TableCell style={{ fontSize: "10px" }} onClick={this.viewApplicants} id={row["id"]}>
-                                                            {value}
+                                                        <TableCell style={{ fontSize: "10px" }} onClick={()=>this.viewApplicants(row["id"])} id={row["id"]}>
+                                                            <Tooltip title="View Applicants" arrow placement="right"><Button color="primary">{value}</Button></Tooltip>
                                                         </TableCell>
                                                     )
                                                 }
