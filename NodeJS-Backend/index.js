@@ -161,7 +161,7 @@ app.get('/students', async (request, response) => {
         console.log(request.query)
         var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student';
         if (!_.isEmpty(request.query)) {
-            var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=\'' + request.query.id+'\'';
+            var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=\'' + request.query.id + '\'';
         }
         var rows = await pool.query(query);
         logger.debug("Response from DB:" + JSON.stringify(rows))
@@ -173,6 +173,34 @@ app.get('/students', async (request, response) => {
         return response.status(code).json({ "message": message })
     }
 });
+
+app.get('/student/:studentId/applications', async (request, response) => {
+    try {
+        var query = 'select c.name,j.location,j.title,j.deadline,a.status,a.id,a.applied_on from applications a left join jobs j on j.id=a.job_id left join company c on c.id=a.company_id where a.student_id=?';
+        var rows = await pool.query(query, [request.params.studentId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching applications details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/jobs', async (request, response) => {
+    try {
+        var query = 'select j.id,j.title,j.posting_date,j.deadline, j.location,j.salary,j.description,j.category,j.company_id,c.name as company_name from jobs j,company c where c.id=j.company_id;'
+        var rows = await pool.query(query);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
 
 app.listen(8080, function () {
     console.log("App listening on port 8080");

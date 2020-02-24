@@ -153,9 +153,9 @@ class SignUp extends Component {
         let redirectToSignIn = null;
         if (this.state.redirectToSignIn) redirectToSignIn = <Redirect to="/signin" />
         return (
-            <div>
+            <div >
                 {redirectToSignIn}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)" }}>
+                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)",backgroundColor:"white", borderRadius:"5px" }}>
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">
@@ -206,6 +206,7 @@ class SignUp extends Component {
                                     <Link to="/signin">Already a User? Sign In</Link>
                                 </div>
                             </form>
+                            <br/>
                             <div>
                                 <Dialog
                                     open={this.state.signUpSuccessful}

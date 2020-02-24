@@ -82,12 +82,15 @@ class SignIn extends Component {
         let home = null;
         //if (this.state.invalidCredentials === false) {
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
-            home = <Redirect to="/students" />
+            home = <Redirect to="/company/jobs" />
+        }
+        if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "student") {
+            home = <Redirect to={"/jobs"} />
         }
         return (
-            <div>
+            <div style={{marginTop:"20px"}}>
                 {home}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)" }}>
+                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)",backgroundColor:"white", borderRadius:"5px" }}>
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">

@@ -46,3 +46,28 @@
   background-color:black;
   color: black;
 }
+
+.searchBar:hover{
+  border: "1px solid brown";
+  background-color: cadetblue;
+}
+
+.inner > li > a:hover{
+  background-color:white;
+  color: white;
+}
+
+.jobTile:hover {
+  background-color:rgb(240, 240, 240);
+  border-left: 3px solid grey;
+  cursor: pointer;
+}
+
+.jobTile {
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+.trial {
+ border-radius: 15px;
+}

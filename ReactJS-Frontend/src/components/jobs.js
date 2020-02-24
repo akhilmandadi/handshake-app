@@ -14,6 +14,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CreateJob from "./createJob"
 import { Redirect } from 'react-router';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const columns = [
     { id: 'title', label: 'Title', minWidth: 70 },
@@ -119,7 +120,7 @@ class Jobs extends Component {
         let errorBanner = null;
         if (this.state.jobs.length === 0) errorBanner = (<b>No Jobs Posted Currently</b>)
         return (
-            <div className="container" style={{ width: "85%", align: "center" }}>
+            <div className="container" style={{ width: "85%", align: "center" ,marginTop:"20px"}}>
                 {createDialog}
                 {jobApplicants}
                 <div>
@@ -128,7 +129,7 @@ class Jobs extends Component {
                     </Fab>
                     <br /><br />
                 </div>
-                <Paper style={{ width: "100%", align: "center", backgroundColor: "rgb(242, 242, 242)" }}>
+                <Paper style={{ width: "100%", align: "center" }}>
                     <TableContainer style={{ maxHeight: "80%" }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -154,7 +155,7 @@ class Jobs extends Component {
                                                 if (column.id === "applicants") {
                                                     return (
                                                         <TableCell style={{ fontSize: "10px" }} onClick={()=>this.viewApplicants(row["id"])} id={row["id"]}>
-                                                            <Button color="primary">{value}</Button>
+                                                            <Tooltip title="View Applicants" arrow placement="right"><Button color="primary">{value}</Button></Tooltip>
                                                         </TableCell>
                                                     )
                                                 }

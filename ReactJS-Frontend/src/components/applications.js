@@ -191,7 +191,7 @@ class Applications extends Component {
         let jobInfoTab = null;
         if (this.state.jobInfo !== {}) {
             jobInfoTab = (
-                <div style={{ backgroundColor: "rgb(225, 225, 225)", borderRadius: "2.5px", padding: "20px" }}>
+                <div style={{ borderRadius: "2.5px", padding: "20px", backgroundColor:"white" }}>
                     <Grid container spacing={3}>
                         <div className="container" style={{ width: "30%" }}><b>Title:</b> {this.state.jobInfo.title}</div>
                         <div className="container" style={{ width: "30%" }}><b>Salary:</b> {this.state.jobInfo.salary}</div>
@@ -222,7 +222,7 @@ class Applications extends Component {
                 </Dialog>
                 {createDialog}
                 <div>
-                    <Link to="/jobs">
+                    <Link to="/company/jobs">
                         <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
                             <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}>Back to Jobs</b>
                         </Fab>
@@ -230,7 +230,7 @@ class Applications extends Component {
                     <br /><br />
                 </div>
                 {jobInfoTab}<br />
-                <Paper style={{ width: "100%", align: "center", backgroundColor: "rgb(242, 242, 242)" }}>
+                <Paper style={{ width: "100%", align: "center" }}>
                     <TableContainer style={{ maxHeight: "80%" }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>

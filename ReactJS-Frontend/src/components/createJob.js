@@ -177,8 +177,8 @@ class CreateJob extends Component {
                                 >
                                     <MenuItem value={"Full-Time"}>Full-Time</MenuItem>
                                     <MenuItem value={"Part-Time"}>Part-Time</MenuItem>
-                                    <MenuItem value={"Intern"}>Intern</MenuItem>
-                                    <MenuItem value={"On Campus"}>On Campus</MenuItem>
+                                    <MenuItem value={"Internship"}>Intern</MenuItem>
+                                    <MenuItem value={"On-Campus"}>On-Campus</MenuItem>
                                 </Select>
                                 <FormHelperText>Required</FormHelperText>
                             </FormControl>
