@@ -7,31 +7,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import moment from 'moment';
-import TablePagination from '@material-ui/core/TablePagination';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InfoIcon from '@material-ui/icons/Info';
-import CheckIcon from '@material-ui/icons/Check';
-import TextField from '@material-ui/core/TextField';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
 import Avatar from '@material-ui/core/Avatar';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 import StudentNavBar from "./studentNavBar"
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 class Jobs extends Component {
     constructor(props) {
@@ -40,6 +23,7 @@ class Jobs extends Component {
             jobs: [],
             jobsFilter: [],
             currentJob: {},
+            isApplyDialogOpen: false,
             Applied: false,
             Pending: false,
             Reviewed: false,
@@ -51,6 +35,8 @@ class Jobs extends Component {
         this.filterApplicationSearchByStatus = this.filterApplicationSearchByStatus.bind(this)
         this.handleFilterChange = this.handleFilterChange.bind(this)
         this.renderJob = this.renderJob.bind(this)
+        this.handleApplyClose = this.handleApplyClose.bind(this)
+        this.enableApplyModal = this.enableApplyModal.bind(this)
     }
     componentDidMount() {
         let url = 'http://localhost:8080/jobs';
@@ -144,6 +130,16 @@ class Jobs extends Component {
         })
     }
 
+    handleApplyClose = () => {
+
+    }
+
+    enableApplyModal = () => {
+        this.setState({
+            isApplyDialogOpen: !this.state.isApplyDialogOpen
+        })
+    }
+
     render() {
         let errorBanner = null;
         if (this.state.jobs.length === 0) {
@@ -155,8 +151,32 @@ class Jobs extends Component {
                 </Card >
             )
         }
+        let applyModal = (
+            <Dialog style={{ minWidth: "400px" }} open={this.state.isApplyDialogOpen} onClose={this.handleApplyClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title"><h4>Apply to {this.state.currentJob.company_name}</h4></DialogTitle>
+                <DialogContent>
+                    <h4>Details from {this.state.currentJob.company_name}:</h4>
+                    Applying for {this.state.currentJob.title} Program requires a few documents. Attach them below
+                    and get one step closer to your next job!
+                    <br /><br /><h5>1. Attach your Resume</h5>
+                    <form>
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" name="Coose" id="exampleFormControlFile1" />
+                        </div>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.enableApplyModal} color="secondary">
+                        Cancel
+                    </Button>
+                    <button type="button" class="btn btn-success" onClick={this.handleApplyClose}>Submit Application</button>
+                </DialogActions>
+            </Dialog>
+        )
         return (
-            <div><StudentNavBar tab="jobs" />
+            <div>
+                <StudentNavBar tab="jobs" />
+                {applyModal}
                 <div className="container" style={{ width: "100%", height: "100%" }}><br />
                     <Grid container spacing={3}>
                         <div style={{ alignContent: "center", width: "100%", marginLeft: "20px", marginRight: "20px", marginBottom: "10px" }}>
@@ -172,6 +192,7 @@ class Jobs extends Component {
                                             <div class="form-group">
                                                 <input type="text" class="form-control" id="search" aria-describedby="search" placeholder="City, State, Zip Code, or Address" />
                                             </div>
+
                                         </div>
                                     </div>
                                     <div class="row">
@@ -204,7 +225,7 @@ class Jobs extends Component {
                             <Card style={{ padding: "10px", marginBottom: "0px", zIndex: "1000", width: "100%" }}>
                                 <CardContent style={{ paddingBottom: "5px" }}>
                                     <Typography >
-                                        <b>Found {this.state.jobs.length} Jobs According to your Preferences</b>
+                                        <Typography color="textSecondary" variant="h6">Found {this.state.jobs.length} Jobs According to your Preferences</Typography>
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -235,26 +256,29 @@ class Jobs extends Component {
                             })}
                             <div style={{ textAlign: "center" }}><br />{errorBanner}</div>
                         </div>
-                        <div style={{ alignContent: "center", width: "60%", marginRight: "20px", overflowX: "none" }}>
+                        <div style={{ alignContent: "center", height: "330px", width: "60%", marginRight: "20px", overflowX: "none", overflowY: "none" }}>
                             <Card style={{ height: "100%", overflowY: "scroll" }}>
                                 <div class="container">
                                     <div class="row" style={{ paddingLeft: "20px" }}>
                                         <div class="col-md-8"><h2>{this.state.currentJob.title}</h2></div>
                                     </div>
                                     <div class="row" style={{ paddingLeft: "20px" }}>
-                                        <div class="col-md-9">{this.state.currentJob.title}</div>
+                                        <div class="col-md-9"><h4 style={{ marginTop: "0px" }}>{this.state.currentJob.company_name}</h4></div>
+                                    </div>
+                                    <div class="row" style={{ paddingLeft: "20px" }}>
+                                        <Typography color="textSecondary" variant="h6" style={{ display: "inline", marginLeft: "15px", marginRight: "25px" }}><span class="glyphicon glyphicon-briefcase"></span> {this.state.currentJob.category}</Typography>
+                                        <Typography color="textSecondary" variant="h6" style={{ display: "inline", marginRight: "25px" }}><span class="glyphicon glyphicon-map-marker"></span> {this.state.currentJob.location}</Typography>
+                                        <Typography color="textSecondary" variant="h6" style={{ display: "inline", marginRight: "25px" }}><span class="glyphicon glyphicon-usd"></span> {this.state.currentJob.salary} per hour</Typography>
+                                        <Typography color="textSecondary" variant="h6" style={{ display: "inline" }}><span class="glyphicon glyphicon-time"></span> Posted {moment(this.state.currentJob.posting_date).format("MMMM Do")}</Typography>
                                     </div><br />
-                                    <div class="row" style={{ paddingLeft: "20px" }}>
-                                        <div class="col-md-2"><span class="glyphicon glyphicon-briefcase"></span> {this.state.currentJob.category}</div>
-                                        <div class="col-md-1"><span class="glyphicon glyphicon-map-marker"></span> {this.state.currentJob.location}</div>
-                                        <div class="col-md-2">$ {this.state.currentJob.salary} per hour</div>
-                                        <div class="col-md-2"><span class="glyphicon glyphicon-time"></span> Posted {moment(this.state.currentJob.posting_date).format("MMMM Do")}</div>
-                                    </div><br/>
-                                    <div class="row" style={{ paddingLeft: "20px"}}>
-                                    <div class="col-md-7" style={{border:"1px solid"}}>Applications close on {moment(this.state.currentJob.dealine).format("MMMM Do, YYYY")}</div>
-                                    </div><br/>
-                                    <div class="row" style={{ paddingLeft: "20px" }}>
-                                        <div class="col-md-8">{this.state.currentJob.description}</div>
+                                    <div class="row" style={{ paddingLeft: "35px" }}>
+                                        <div class="col-md-7" style={{ border: "1px solid", padding: "10px", borderStyle: "groove", borderRadius: "0px" }}>
+                                            <div class="col-md-10" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.dealine).format("MMMM Do, YYYY")}</div>
+                                            <div class="col-md-2" ><button type="button" class="btn btn-success" onClick={this.enableApplyModal}>Apply</button></div>
+                                        </div>
+                                    </div><br />
+                                    <div class="row" style={{ paddingLeft: "20px", paddingRight: "40px" }}>
+                                        <div class="col-md-8" style={{ paddingRight: "20px" }}>{this.state.currentJob.description}</div>
                                     </div>
                                 </div>
                             </Card >
