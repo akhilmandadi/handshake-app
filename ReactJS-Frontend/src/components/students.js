@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
 import '../App.css';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -16,16 +15,8 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 
 
 class Students extends Component {
@@ -96,7 +87,7 @@ class Students extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{marginTop:"20px"}}>
                 <div className="container" style={{ width: "85%", align: "center" }}>
                     <div style={{ alignContent: "center",marginBottom:"10px" }}><Paper component="form" style={{ padding: "2px 4px", display: "flex", alignItems: "center", width: "100%", alignContent: "center", border: "1px solid", borderRadius: "10px", backgroundColor: "#f0fffd" }}>
                         <InputBase
@@ -124,7 +115,7 @@ class Students extends Component {
                     {this.state.students.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(student => {
                         return (
                             <span style={{ padding: "0px" }}>
-                                <Card style={{ backgroundColor: "rgb(202, 202, 202)", padding: "0px", margin: "4px" }}>
+                                <Card style={{  padding: "0px", margin: "4px" }}>
                                     <CardContent style={{ paddingBottom: "5px" }}>
                                         <Typography color="textSecondary" gutterBottom>
                                             <Link to={'/students/' + student.id}><b>{student.name.toUpperCase()}</b></Link>

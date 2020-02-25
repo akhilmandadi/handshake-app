@@ -85,12 +85,12 @@ class SignIn extends Component {
             home = <Redirect to="/company/jobs" />
         }
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "student") {
-            home = <Redirect to={"/jobs"} />
+            home = <Redirect to={"/explore/students"} />
         }
         return (
-            <div style={{marginTop:"20px"}}>
+            <div style={{ marginTop: "20px" }}>
                 {home}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)",backgroundColor:"white", borderRadius:"5px" }}>
+                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)", backgroundColor: "white", borderRadius: "5px" }}>
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">
@@ -98,7 +98,7 @@ class SignIn extends Component {
                             </div>
                             <div>
                                 <div class="radio-inline">
-                                    <input type="radio" style={{ color: "black" }} value="student" name="persona"  onChange={this.changePersona} /><p>I'm a Student</p>
+                                    <input type="radio" style={{ color: "black" }} value="student" name="persona" onChange={this.changePersona} /><p>I'm a Student</p>
                                 </div>
                                 <div class="radio-inline">
                                     <input type="radio" value="company" name="persona" onChange={this.changePersona} defaultChecked /><p>I'm a Company</p>

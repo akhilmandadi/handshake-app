@@ -44,25 +44,6 @@ class Jobs extends Component {
 
     componentDidMount() {
         this.updateJobs();
-        // let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
-        // axios.defaults.withCredentials = true;
-        // axios.get(url)
-        //     .then(response => {
-        //         if (response.status === 200) {
-        //             this.setState({
-        //                 jobs: response.data
-        //             })
-        //         } else {
-        //             this.setState({
-        //                 jobs: []
-        //             })
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             jobs: []
-        //         })
-        //     });
     }
     updateJobs = () => {
         let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';

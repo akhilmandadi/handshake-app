@@ -55,27 +55,6 @@ class Applications extends Component {
     componentDidMount() {
         this.updateJobs();
         const { match: { params } } = this.props;
-        // let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
-        // axios.defaults.withCredentials = true;
-        // axios.get(url)
-        //     .then(response => {
-        //         if (response.status === 200) {
-        //             console.log(response.data)
-        //             this.setState({
-        //                 applications: response.data
-        //             })
-        //         } else {
-        //             this.setState({
-        //                 applications: []
-        //             })
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             applications: []
-        //         })
-        //     });
-
         axios.defaults.withCredentials = true;
         axios.get('http://localhost:8080/job/' + params.jobId)
             .then(response => {
@@ -191,20 +170,20 @@ class Applications extends Component {
         let jobInfoTab = null;
         if (this.state.jobInfo !== {}) {
             jobInfoTab = (
-                <div style={{ borderRadius: "2.5px", padding: "20px", backgroundColor:"white" }}>
+                <div style={{ borderRadius: "2.5px", padding: "30px", backgroundColor:"white" }}>
                     <Grid container spacing={3}>
-                        <div className="container" style={{ width: "30%" }}><b>Title:</b> {this.state.jobInfo.title}</div>
-                        <div className="container" style={{ width: "30%" }}><b>Salary:</b> {this.state.jobInfo.salary}</div>
-                        <div className="container" style={{ width: "40%" }}><b>Deadline:</b> {moment(this.state.jobInfo.deadline).format("MMMM Do YYYY")}</div>
-                        <div className="container" style={{ width: "30%" }}><b>Category:</b> {this.state.jobInfo.category}</div>
-                        <div className="container" style={{ width: "30%" }}><b>Location:</b> {this.state.jobInfo.location}</div>
-                        <div className="container" style={{ width: "40%" }}><b>Posted On: </b> {moment(this.state.jobInfo.posting_date).format("MMMM Do YYYY")}</div>
+                        <div className="container" style={{ width: "25%" , marginLeft:"60px"}}><b>Title:</b> {this.state.jobInfo.title}</div>
+                        <div className="container" style={{ width: "25%" }}><b>Salary:<span class="glyphicon glyphicon-usd"></span></b>{this.state.jobInfo.salary} per hour</div>
+                        <div className="container" style={{ width: "30%" }}><b><span class="glyphicon glyphicon-time"> </span> Deadline:</b> {moment(this.state.jobInfo.deadline).format("MMMM Do YYYY")}</div>
+                        <div className="container" style={{ width: "25%", marginLeft:"60px" }}><b>Category:</b> {this.state.jobInfo.category}</div>
+                        <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-map-marker"></span>Location:</b> {this.state.jobInfo.location}</div>
+                        <div className="container" style={{ width: "30%" }}><b><span class="glyphicon glyphicon-time"></span> Posted On: </b> {moment(this.state.jobInfo.posting_date).format("MMMM Do YYYY")}</div>
                     </Grid>
                 </div>
             )
         }
         return (
-            <div className="container" style={{ width: "85%", alignItems: "center" }}>
+            <div className="container" style={{ width: "85%", alignItems: "center", marginTop:"20px" }}>
                 <Dialog onClose={this.handleEditDialogClose} aria-labelledby="simple-dialog-title" open={this.state.isEditDialogOpen}>
                     <DialogTitle id="simple-dialog-title">Update Status To</DialogTitle>
                     <List>
@@ -224,7 +203,7 @@ class Applications extends Component {
                 <div>
                     <Link to="/company/jobs">
                         <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
-                            <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}>Back to Jobs</b>
+                            <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}> Back to All Jobs</b>
                         </Fab>
                     </Link>
                     <br /><br />

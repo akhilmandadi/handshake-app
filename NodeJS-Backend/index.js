@@ -161,10 +161,13 @@ app.get('/students', async (request, response) => {
         console.log(request.query)
         var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student';
         if (!_.isEmpty(request.query)) {
-            var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=\'' + request.query.id + '\'';
+            if (_.isUndefined(request.query.exclude)) {
+                var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=\'' + request.query.id + '\'';
+            } else {
+                var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id!=\'' + request.query.id + '\'';
+            }
         }
         var rows = await pool.query(query);
-        logger.debug("Response from DB:" + JSON.stringify(rows))
         return response.json(rows).status(200);
     } catch (ex) {
         logger.error(JSON.stringify(ex))

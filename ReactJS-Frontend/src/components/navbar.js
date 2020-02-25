@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import '../App.css';
-
+import logo from '../favicon.ico'
 class NavBar extends Component {
     constructor(props) {
         super(props);
@@ -19,28 +19,28 @@ class NavBar extends Component {
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
             navBar = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to="/profile" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
-                    <li><Link to="/company/jobs" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
-                    <li><Link to="/events" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
-                    <li><Link to="/students" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
-                    <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "white" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
+                    <li><Link to={"/company/"+sessionStorage.getItem("id")+"/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to="/company/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
+                    <li><Link to="/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
+                    <li><Link to="/students" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
+                    <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "black" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                 </ul>
             )
         } else if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "student") {
             navBar = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to="/jobs" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span> Jobs</Link></li>
-                    <li><Link to="/events" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
-                    <li><Link to="/student/search" style={{ color: "white" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
-                    <li><Link to="/student/:id/profile" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span>Profile</Link></li>
-                    <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "white" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
+                    <li><Link to="/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span> Jobs</Link></li>
+                    <li><Link to="/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
+                    <li><Link to="/explore/students" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
+                    <li><Link to={"/student/"+sessionStorage.getItem("id")+"/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "black" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                 </ul>
             )
         } else {
             navBar = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to="/signin" style={{ color: "white" }}><span class="glyphicon glyphicon-log-in"></span> LogIn</Link></li>
-                    <li><Link to="/signup" style={{ color: "white" }}><span class="glyphicon glyphicon-user"></span> SignUp</Link></li>
+                    <li><Link to="/signin" style={{ color: "black" }}><span class="glyphicon glyphicon-log-in"></span> LogIn</Link></li>
+                    <li><Link to="/signup" style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> SignUp</Link></li>
                 </ul>
             )
         }
@@ -48,10 +48,10 @@ class NavBar extends Component {
         return (
             <div>
                 {redirectVar}
-                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#0d1463", borderRadius: "0px" ,padding:"0px",margin:"0px"}}>
+                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#f2f5fa", borderRadius: "0px" ,padding:"0px",margin:"0px"}}>
                     <div class="container-fluid">
-                        <div class="navbar-header">
-                            <b class="navbar-brand" style={{ color: "white" }}>Handshake</b>
+                        <div class="navbar-header" style={{display:"inline"}}>
+                            <b class="navbar-brand" style={{ color: "black",display:"inline" }}><img style={{display:"inline", width:"35px", height:"35px"}} src={logo} /> Handshake</b>
                         </div>
                         <ul class="nav navbar-nav">
                         </ul>

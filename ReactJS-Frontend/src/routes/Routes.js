@@ -11,6 +11,7 @@ import StudentProfile from "../components/studentProfile";
 
 import StudentApplications from "../components/student/applications";
 import SearchJobs from "../components/student/searchJobs";
+import StudentSearch from "../components/student/studentSearch";
 
 class Routes extends Component {
     render() {
@@ -27,6 +28,7 @@ class Routes extends Component {
 
                 <Route path="/student/:id/applications" exact component={StudentApplications} />
                 <Route path="/jobs" exact component={SearchJobs} />
+                <Route path="/explore/students" exact component={StudentSearch} />
             </div>
         )
     }

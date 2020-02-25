@@ -37,15 +37,15 @@
   }
 }
 
-.nav > li > a:hover{
+/* .nav > li > a:hover{
   background-color:black;
   color: black;
-}
+} */
 
-.nav > li > a:visited{
+/* .nav > li > a:visited{
   background-color:black;
   color: black;
-}
+} */
 
 .searchBar:hover{
   border: "1px solid brown";
