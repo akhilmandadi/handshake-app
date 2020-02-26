@@ -19,9 +19,9 @@ class NavBar extends Component {
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
             navBar = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to={"/company/"+sessionStorage.getItem("id")+"/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to={"/company/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
                     <li><Link to="/company/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
-                    <li><Link to="/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
+                    <li><Link to="/company/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
                     <li><Link to="/students" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
                     <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "black" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                 </ul>

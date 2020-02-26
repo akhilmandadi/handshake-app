@@ -26,12 +26,10 @@ import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 const columns = [
     { id: 'student_name', label: 'Student Name', minWidth: 100 },
     { id: 'student_college', label: 'College', minWidth: 120 },
-    { id: 'applied_on', label: 'Applied On', minWidth: 120 },
-    { id: 'status', label: 'Status', minWidth: 100 },
-    { id: 'edit', label: '', minWidth: 100 }
+    { id: 'registered_on', label: 'Registered On', minWidth: 120 }
 ];
 
-class Applications extends Component {
+class Registrations extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -56,7 +54,7 @@ class Applications extends Component {
         this.updateJobs();
         const { match: { params } } = this.props;
         axios.defaults.withCredentials = true;
-        axios.get('http://localhost:8080/job/' + params.jobId)
+        axios.get('http://localhost:8080/event/' + params.eventId)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
@@ -95,33 +93,33 @@ class Applications extends Component {
     }
 
     updateStatusOfApplication = (status) => {
-        console.log("updateStateOfApplication");
-        console.log(this.state.currentApplicationId)
-        console.log(status)
-        this.setState({
-            isEditDialogOpen: false
-        })
-        axios.put('http://localhost:8080/applications/' + this.state.currentApplicationId, { "status": status })
-            .then(response => {
-                if (response.status === 200) {
-                    console.log(response.data)
-                    this.updateJobs();
-                } else {
-                    this.setState({
-                        //loader
-                    })
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    //loader
-                })
-            });
+        // console.log("updateStateOfApplication");
+        // console.log(this.state.currentApplicationId)
+        // console.log(status)
+        // this.setState({
+        //     isEditDialogOpen: false
+        // })
+        // axios.put('http://localhost:8080/applications/' + this.state.currentApplicationId, { "status": status })
+        //     .then(response => {
+        //         if (response.status === 200) {
+        //             console.log(response.data)
+        //             this.updateJobs();
+        //         } else {
+        //             this.setState({
+        //                 //loader
+        //             })
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         this.setState({
+        //             //loader
+        //         })
+        //     });
     }
 
     updateJobs = () => {
         const { match: { params } } = this.props;
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
+        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/event/' + params.eventId + '/applicants';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -166,18 +164,16 @@ class Applications extends Component {
     render() {
         let createDialog = null;
         let errorBanner = null;
-        if (this.state.applications.length === 0) errorBanner = (<b>No Applicants for this Job</b>)
+        if (this.state.applications.length === 0) errorBanner = (<b>No Registrations for this Event</b>)
         let jobInfoTab = null;
         if (this.state.jobInfo !== {}) {
             jobInfoTab = (
                 <div style={{ borderRadius: "2.5px", padding: "30px", backgroundColor: "white" }}>
                     <Grid container spacing={3}>
-                        <div className="container" style={{ width: "25%", marginLeft: "60px" }}><b>Title:</b> {this.state.jobInfo.title}</div>
-                        <div className="container" style={{ width: "25%" }}><b>Salary:<span class="glyphicon glyphicon-usd"></span></b>{this.state.jobInfo.salary} per hour</div>
-                        <div className="container" style={{ width: "30%" }}><b><span class="glyphicon glyphicon-time"> </span> Deadline:</b> {moment(this.state.jobInfo.deadline).format("MMMM Do YYYY")}</div>
-                        <div className="container" style={{ width: "25%", marginLeft: "60px" }}><b>Category:</b> {this.state.jobInfo.category}</div>
-                        <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-map-marker"></span>Location:</b> {this.state.jobInfo.location}</div>
-                        <div className="container" style={{ width: "30%" }}><b><span class="glyphicon glyphicon-time"></span> Posted On: </b> {moment(this.state.jobInfo.posting_date).format("MMMM Do YYYY")}</div>
+                        <div className="container" style={{ width: "25%" }}><b>Name:</b> {this.state.jobInfo.name}</div>
+                        <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-time"> </span></b> {moment(this.state.jobInfo.date).format("MMMM Do YYYY")} {moment(this.state.jobInfo.time, "HH:mm:ss").format("LT")}</div>
+                        <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-map-marker"></span></b> {this.state.jobInfo.location}</div>
+                        <div className="container" style={{ width: "25%" }}><b>Eligibility:</b> {this.state.jobInfo.eligibility}</div>
                     </Grid>
                 </div>
             )
@@ -201,9 +197,9 @@ class Applications extends Component {
                 </Dialog>
                 {createDialog}
                 <div>
-                    <Link to="/company/jobs">
+                    <Link to="/company/events">
                         <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
-                            <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}> Back to All Jobs</b>
+                            <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}> Back to All Events</b>
                         </Fab>
                     </Link>
                     <br /><br />
@@ -231,14 +227,7 @@ class Applications extends Component {
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                             {columns.map(column => {
                                                 let value = row[column.id];
-                                                if (column.id === "applied_on") value = moment(value).format("dddd, MMMM Do YYYY");
-                                                if (column.id === "edit") {
-                                                    return (
-                                                        <TableCell style={{ fontSize: "10px", textAlign: "center" }} onClick={() => this.enableEdit(row["application_id"], row["status"])} id={row["application_id"]}>
-                                                            <Button color="secondary">{value}</Button>
-                                                        </TableCell>
-                                                    )
-                                                }
+                                                if (column.id === "registered_on") value = moment(value).format("dddd, MMMM Do YYYY");
                                                 if (column.id === "student_name") {
                                                     return (<TableCell key={column.id} align={column.align} style={{ fontSize: "10px", textAlign: "center" }}>
                                                         <Link to={'/students/' + row["student_id"]}><b>{value.toUpperCase()}</b></Link>
@@ -273,4 +262,4 @@ class Applications extends Component {
     }
 }
 
-export default Applications;
+export default Registrations;

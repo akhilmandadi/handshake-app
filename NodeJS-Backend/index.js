@@ -158,7 +158,6 @@ app.get('/job/:jobId', async (request, response) => {
 
 app.get('/students', async (request, response) => {
     try {
-        console.log(request.query)
         var query = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student';
         if (!_.isEmpty(request.query)) {
             if (_.isUndefined(request.query.exclude)) {
@@ -172,6 +171,22 @@ app.get('/students', async (request, response) => {
     } catch (ex) {
         logger.error(JSON.stringify(ex))
         let message = ex.message ? ex.message : 'Error while fetching students details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/company', async (request, response) => {
+    try {
+        var query = 'SELECT name,email,location,description,contact_num,contact_num,contact_name,contact_email from company';
+        if (!_.isEmpty(request.query)) {
+            var query = 'SELECT name,email,location,description,contact_num,contact_num,contact_name,contact_email from company where id=\'' + request.query.id + '\'';
+        }
+        var rows = await pool.query(query);
+        return response.json(rows[0]).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching company details';
         let code = ex.statusCode ? ex.statusCode : 500;
         return response.status(code).json({ "message": message })
     }
@@ -200,6 +215,128 @@ app.get('/jobs', async (request, response) => {
     } catch (ex) {
         logger.error(JSON.stringify(ex))
         let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/student/:studentId/registrations', async (request, response) => {
+    try {
+        var query = 'select c.name,j.location,j.title,j.deadline,a.status,a.id,a.applied_on from applications a left join jobs j on j.id=a.job_id left join company c on c.id=a.company_id where a.student_id=?';
+        var rows = await pool.query(query, [request.params.studentId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching applications details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/events', async (request, response) => {
+    try {
+        var query = 'select j.id,j.title,j.posting_date,j.deadline, j.location,j.salary,j.description,j.category,j.company_id,c.name as company_name from jobs j,company c where c.id=j.company_id;'
+        var rows = await pool.query(query);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching jobs';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/company/:id/events', async (request, response) => {
+    try {
+        var query = 'SELECT id,name,date,time,location,eligibility,description,\'View Registrations\' as applicants from events where company_id=?';
+        var rows = await pool.query(query, [request.params.id]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching events';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.post('/company/:id/events', async (request, response) => {
+    try {
+        var query = 'insert into events(id,name,date,time,location,eligibility,description,company_id) values(?,?,?,?,?,?,?,?)';
+        var rows = await pool.query(query, [uuid.generate(), request.body.name, request.body.date, request.body.time, request.body.location, request.body.eligibility, request.body.description, request.params.id]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(request.body).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while posting events';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.get('/company/:companyId/event/:eventId/applicants', async (request, response) => {
+    try {
+        var query = 'SELECT student.name as student_name, student.id as student_id, student.college as student_college,registrations.id as registration_id, registrations.registered_on as registered_on from student,events,company,registrations where events.id=? and company.id=? and registrations.student_id=student.id and registrations.company_id=? and registrations.event_id=?';
+        var rows = await pool.query(query, [request.params.eventId, request.params.companyId, request.params.companyId, request.params.eventId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching event applicants';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.put('/registrations/:registrationId', async (request, response) => {
+    try {
+        var query = 'update applications set status=? where id=?'
+        var rows = await pool.query(query, [request.body.status, request.params.applicationId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json({ "message": "Update Success" }).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while Updating applicantion Status';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/event/:eventId', async (request, response) => {
+    try {
+        var query = 'SELECT * from events where id=?';
+        var rows = await pool.query(query, [request.params.eventId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching event details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
+app.put('/company/:id/profile', async (request, response) => {
+    try {
+        if (!_.isUndefined(request.body.description)) {
+            var query = 'update company set description=? where id=?'
+            var rows = await pool.query(query, [request.body.description, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.contact_name)) {
+            var query = 'update company set contact_name=?,contact_num=?,contact_email=? where id=?'
+            var rows = await pool.query(query, [request.body.contact_name, request.body.contact_num, request.body.contact_email, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.name)) {
+            var query = 'update company set name=?,location=? where id=?'
+            var rows = await pool.query(query, [request.body.name, request.body.location, request.params.id]);
+        }
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json({ "message": "Update Success" }).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while Updating company profile';
         let code = ex.statusCode ? ex.statusCode : 500;
         return response.status(code).json({ "message": message })
     }

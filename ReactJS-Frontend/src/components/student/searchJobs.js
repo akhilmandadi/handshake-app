@@ -256,14 +256,14 @@ class Jobs extends Component {
                             })}
                             <div style={{ textAlign: "center" }}><br />{errorBanner}</div>
                         </div>
-                        <div style={{ alignContent: "center", height: "330px", width: "60%", marginRight: "20px", overflowX: "none", overflowY: "none" }}>
+                        <div style={{ alignContent: "center", height: "330px", width: "59%", marginRight: "20px", overflowX: "none", overflowY: "none" }}>
                             <Card style={{ height: "100%", overflowY: "scroll" }}>
                                 <div class="container">
                                     <div class="row" style={{ paddingLeft: "20px" }}>
                                         <div class="col-md-8"><h2>{this.state.currentJob.title}</h2></div>
                                     </div>
                                     <div class="row" style={{ paddingLeft: "20px" }}>
-                                        <div class="col-md-9"><h4 style={{ marginTop: "0px" }}>{this.state.currentJob.company_name}</h4></div>
+                                        <div class="col-md-9"><Link to={'/company/'+this.state.currentJob.company_id} ><h4 style={{ marginTop: "0px" }}>{this.state.currentJob.company_name}</h4></Link></div>
                                     </div>
                                     <div class="row" style={{ paddingLeft: "20px" }}>
                                         <Typography color="textSecondary" variant="h6" style={{ display: "inline", marginLeft: "15px", marginRight: "25px" }}><span class="glyphicon glyphicon-briefcase"></span> {this.state.currentJob.category}</Typography>

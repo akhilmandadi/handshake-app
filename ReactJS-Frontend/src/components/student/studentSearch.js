@@ -13,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Avatar from '@material-ui/core/Avatar';
 import StudentNavBar from "./studentNavBar"
+import { Link } from 'react-router-dom';
 
 class StudentSearch extends Component {
     constructor(props) {
@@ -182,11 +183,12 @@ class StudentSearch extends Component {
             errorBanner = (
                 <Card style={{ padding: "0px", margin: "7px" }}>
                     <CardContent style={{ padding: "5px" }}>
-                        <b>No students Found</b>
+                        <b>No Students Found</b>
                     </CardContent >
                 </Card >
             )
         }
+        var colors = ['orange', 'teal', 'brown', 'blue'];
         return (
             <div><StudentNavBar tab="explore" /><br />
                 <div className="container" style={{ width: "90%", height: "100%" }}>
@@ -235,27 +237,28 @@ class StudentSearch extends Component {
                             {this.state.students.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(student => {
                                 return (
                                     <span style={{ alignContent: "right", padding: "0px" }} key={student.id}>
-                                        <Card style={{ padding: "0px", marginBottom: "7px" }}>
-                                            <div style={{ width: "10%", float: "left", height: "100%", alignItems: "center", overflow: "hidden" }}>
-                                                <Avatar variant="circle" style={{ width: "60px", height: "60px", margin: "10px", backgroundColor: "orange" }}>
-                                                    <b style={{ fontSize: "80" }}>{student.name.substring(0, 1)}</b>
-                                                </Avatar>
-                                            </div>
-                                            <div style={{ width: "85%", height: "100%", overflowX: "float" }}>
-                                                <CardContent style={{ paddingBottom: "5px" }}>
-                                                    <Typography color="textSecondary" gutterBottom>
-                                                        <b>{student.name.toUpperCase()}</b>
+                                        <Card style={{ padding: "0px", marginBottom: "7px", paddingBottom: "7px" }}>
+                                            <div class="row" style={{ width: "100%" }}>
+                                                <div class="col-md-1" style={{ textAlign: "-webkit-center", float: "left", height: "100%", alignItems: "center", paddingRight: "0px", marginRight: "0px" }}>
+                                                    <Avatar variant="circle" style={{ width: "60px", height: "60px", margin: "10px", backgroundColor: colors[Math.floor(Math.random() * colors.length)] }}>
+                                                        <b style={{ fontSize: "80" }}>{student.name.substring(0, 1)}</b>
+                                                    </Avatar>
+                                                </div>
+                                                <div class="col-md-4" style={{ textAlign: "-webkit-left", paddingTop: "10px", marginLeft: "25px" }}>
+                                                    <Typography gutterBottom variant="h6">
+                                                        <Link to={'/students/' + student.id}><b>{student.name.toUpperCase()}</b></Link>
                                                     </Typography>
-                                                    <Typography color="textSecondary">
+                                                    <Typography>
                                                         {student.college}
                                                     </Typography>
-                                                    <Typography color="textSecondary" style={{ verticalAlign: "center" }}>
+                                                    <Typography style={{ verticalAlign: "center" }}>
                                                         Status: {student.status}
                                                     </Typography>
-                                                    <Typography color="textSecondary">
+                                                    <Typography >
                                                         Applied
                                                     </Typography>
-                                                </CardContent></div>
+                                                </div>
+                                            </div>
                                         </Card>
                                     </span>
                                 );

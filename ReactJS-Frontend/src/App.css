@@ -71,3 +71,7 @@
 .trial {
  border-radius: 15px;
 }
+
+.editicon:hover{
+  background-color:#e8e9eb
+}
