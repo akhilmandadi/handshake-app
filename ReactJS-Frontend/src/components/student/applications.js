@@ -6,18 +6,16 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import moment from 'moment';
 import TablePagination from '@material-ui/core/TablePagination';
-import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Avatar from '@material-ui/core/Avatar';
 import StudentNavBar from "./studentNavBar";
-import _ from "lodash"
+import _ from "lodash";
 
 class StudentApplications extends Component {
     constructor(props) {
