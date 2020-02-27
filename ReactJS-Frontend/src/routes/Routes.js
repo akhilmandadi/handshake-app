@@ -16,6 +16,7 @@ import StudentSearch from "../components/student/studentSearch";
 import Registrations from "../components/registrations";
 import CompanyProfile from "../components/profile";
 import ViewCompanyProfile from "../components/student/companyProfile";
+import StudentProfile from "../components/student/profile";
 
 class Routes extends Component {
     render() {
@@ -36,7 +37,8 @@ class Routes extends Component {
                 <Route path="/student/:id/applications" exact component={StudentApplications} />
                 <Route path="/jobs" exact component={SearchJobs} />
                 <Route path="/explore/students" exact component={StudentSearch} />
-                <Route path="/company/:companyId" exact component={ViewCompanyProfile} />
+                <Route path="/company/:companyId/profile" exact component={ViewCompanyProfile} />
+                <Route path="/student/profile" exact component={StudentProfile} />
             </div>
         )
     }

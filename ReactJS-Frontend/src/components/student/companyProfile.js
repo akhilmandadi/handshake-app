@@ -91,7 +91,7 @@ class ViewCompanyProfile extends Component {
                                 <div class="row" style={{ width: "100%" }}>
                                     <div class="col-md-12" style={{ marginBottom: "10px" }}>
                                         <Typography gutterBottom variant="subtitle" style={{ marginLeft: "20px" }}>
-                                            {this.state.description === null ? "NA" : this.state.description}
+                                            {(this.state.description === null || this.state.description === "") ? "NA" : this.state.description}
                                         </Typography>
                                     </div>
                                 </div>
@@ -107,21 +107,21 @@ class ViewCompanyProfile extends Component {
                                         <div class="col-md-12" style={{ marginBottom: "10px", display: "inline", verticalAlign: "middle" }}>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><MailOutlineIcon style={{ fontSize: 25 }} color="primary" /></div>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><Typography gutterBottom variant="subtitle">
-                                                &nbsp;&nbsp;{this.state.contact_email === null ? "NA" : this.state.contact_email}
+                                                &nbsp;&nbsp;{(this.state.contact_email === null || this.state.contact_email === "") ? "NA" : this.state.contact_email}
                                             </Typography>
                                             </div>
                                         </div>
                                         <div class="col-md-12" style={{ marginBottom: "10px", display: "inline", verticalAlign: "middle" }}>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><PhoneIcon style={{ fontSize: 25 }} color="primary" /></div>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><Typography gutterBottom variant="subtitle">
-                                                &nbsp;&nbsp;{this.state.contact_num === null ? "NA" : this.state.contact_num}
+                                                &nbsp;&nbsp;{(this.state.contact_num === null || this.state.contact_num === "") ? "NA" : this.state.contact_num}
                                             </Typography>
                                             </div>
                                         </div>
                                         <div class="col-md-12" style={{ marginBottom: "10px", display: "inline", verticalAlign: "middle" }}>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><AssignmentIndIcon style={{ fontSize: 25 }} color="primary" /></div>
                                             <div style={{ display: "inline", verticalAlign: "middle" }}><Typography gutterBottom variant="subtitle">
-                                                &nbsp;&nbsp;{this.state.contact_name === null ? "NA" : this.state.contact_name}
+                                                &nbsp;&nbsp;{(this.state.contact_name === null || this.state.contact_name === "") ? "NA" : this.state.contact_name}
                                             </Typography>
                                             </div>
                                         </div>
