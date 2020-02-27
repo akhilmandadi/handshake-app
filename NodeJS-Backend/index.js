@@ -342,6 +342,49 @@ app.put('/company/:id/profile', async (request, response) => {
     }
 })
 
+app.put('/student/:id/profile', async (request, response) => {
+    try {
+        if (!_.isUndefined(request.body.objective)) {
+            var query = 'update student set career_objective=? where id=?'
+            var rows = await pool.query(query, [request.body.objective, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.contact_name)) {
+            var query = 'update company set contact_name=?,contact_num=?,contact_email=? where id=?'
+            var rows = await pool.query(query, [request.body.contact_name, request.body.contact_num, request.body.contact_email, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.name)) {
+            var query = 'update company set name=?,location=? where id=?'
+            var rows = await pool.query(query, [request.body.name, request.body.location, request.params.id]);
+        }
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json({ "message": "Update Success" }).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while Updating student profile';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/student/:id/profile', async (request, response) => {
+    try {
+        var queryForStudent = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=?';
+        var studentInfo = await pool.query(queryForStudent, [request.params.id]);
+        var queryForEducation = 'select * from education where student_id=?';
+        var educationInfo = await pool.query(queryForEducation, [request.params.id]);
+        var queryForExperience = 'select * from experience where student_id=?';
+        var experienceInfo = await pool.query(queryForExperience, [request.params.id]);
+        studentInfo[0].education = _.sortBy(educationInfo, ['year_of_passing']);
+        studentInfo[0].experience = _.sortBy(experienceInfo, ['start_date']);
+        return response.json(studentInfo[0]).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching applications details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+});
+
 app.listen(8080, function () {
     console.log("App listening on port 8080");
 });

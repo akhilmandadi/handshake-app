@@ -32,7 +32,7 @@ class NavBar extends Component {
                     <li><Link to="/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span> Jobs</Link></li>
                     <li><Link to="/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
                     <li><Link to="/explore/students" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
-                    <li><Link to={"/student/"+sessionStorage.getItem("id")+"/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to={"/student/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
                     <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "black" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                 </ul>
             )

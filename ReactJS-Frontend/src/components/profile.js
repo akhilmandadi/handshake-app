@@ -264,7 +264,7 @@ class CompanyProfile extends Component {
         if (!this.state.enableProfileEdit) {
             profileSave = (
                 <CardContent style={{ textAlign: "-webkit-right" }} >
-                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer"}} />
+                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                     <div style={{ textAlign: "-webkit-center" }}>
                         <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "orange" }}>
                             <h3>{this.state.company.name}</h3>
