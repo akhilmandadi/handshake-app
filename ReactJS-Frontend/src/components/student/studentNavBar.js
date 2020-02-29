@@ -49,7 +49,7 @@ class StudentNavBar extends Component {
         }
         return (
             <div className="inner" style={{ marginBottom: "0px", border: "1px solid", borderStyle: "groove" }}>
-                <nav className="inner" class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#f2f5fa", height: "10px", borderRadius: "0px", padding: "0px", margin: "0px" }}>
+                <nav className="inner" class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#fff", height: "10px", borderRadius: "0px", padding: "0px", margin: "0px" }}>
                     {navBar}
                 </nav>
             </div>

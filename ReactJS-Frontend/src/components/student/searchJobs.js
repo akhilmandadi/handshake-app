@@ -273,7 +273,7 @@ class Jobs extends Component {
                                     </div><br />
                                     <div class="row" style={{ paddingLeft: "35px" }}>
                                         <div class="col-md-7" style={{ border: "1px solid", padding: "10px", borderStyle: "groove", borderRadius: "0px" }}>
-                                            <div class="col-md-10" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.dealine).format("MMMM Do, YYYY")}</div>
+                                            <div class="col-md-10" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.deadline).format("MMMM Do, YYYY")}</div>
                                             <div class="col-md-2" ><button type="button" class="btn btn-success" onClick={this.enableApplyModal}>Apply</button></div>
                                         </div>
                                     </div><br />

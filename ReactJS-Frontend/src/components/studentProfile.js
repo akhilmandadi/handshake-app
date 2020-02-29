@@ -50,6 +50,7 @@ class StudentProfile extends Component {
     render() {
         let name = '\'' + this.state.student.name + '\'';
         let educationDetails = null;
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if (this.state.education.length > 0) {
             educationDetails = (
                 <div class="row">
@@ -58,7 +59,7 @@ class StudentProfile extends Component {
                             <div class="row" style={{ paddingLeft: "30px", marginBottom: "20px" }}>
                                 <div class="col-md-2" style={{ marginLeft: "15px", paddingRight: "0px", marginRight: "0px" }}>
                                     <Avatar variant="square" style={{ width: "50px", height: "50px", backgroundColor: "white", color: "black", border: "2px solid", borderStyle: "groove" }}>
-                                        <h6><SchoolIcon style={{ fontSize: 35, color:"#2c347a" }} /></h6>
+                                        <h6><SchoolIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
                                     </Avatar>
                                 </div>
                                 <div class="col-md-9" style={{ marginLeft: "0px" }}>
@@ -74,7 +75,7 @@ class StudentProfile extends Component {
                                     </div>
                                     <div class="row">
                                         <Typography variant="h6" color="inherit">
-                                            {this.state.education[index]["month_of_starting"]} - {this.state.education[index]["year_of_starting"]} to {this.state.education[index]["month_of_passing"]} - {this.state.education[index]["year_of_passing"]}
+                                            {months[this.state.education[index]["month_of_starting"]]} {this.state.education[index]["year_of_starting"]} to {months[this.state.education[index]["month_of_passing"]]} {this.state.education[index]["year_of_passing"]}
                                         </Typography>
                                     </div>
                                     <div class="row" >
@@ -104,7 +105,7 @@ class StudentProfile extends Component {
                             <div class="row" style={{ paddingLeft: "30px", marginBottom: "20px" }}>
                                 <div class="col-md-2" style={{ marginLeft: "15px", paddingRight: "0px", marginRight: "0px" }}>
                                     <Avatar variant="square" style={{ width: "50px", height: "50px", backgroundColor: "white", color: "black", border: "2px solid", borderStyle: "groove" }}>
-                                        <h6><LaptopMacIcon style={{ fontSize: 35, color:"#2c347a" }} /></h6>
+                                        <h6><LaptopMacIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
                                     </Avatar>
                                 </div>
                                 <div class="col-md-9" style={{ marginLeft: "0px" }}>
@@ -176,12 +177,21 @@ class StudentProfile extends Component {
                         </div>
                         <div class="col-md-8">
                             <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
+                                <h4 style={{ marginBottom: "25px", paddingBottom: "0px", marginLeft: "15px" }}>Objective</h4>
+                                <div class="row" style={{ width: "100%", marginLeft: "15px", marginBottom: "0px" }}>
+                                    <div class="col-md-12" style={{ textAlign: "-webkit-center" }}><h5 style={{marginTop: "0px"}}>
+                                        {this.state.student.career_objective === null ? "Not Updated" : this.state.student.career_objective}
+                                    </h5>
+                                    </div>
+                                </div>
+                            </Card>
+                            <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
                                 <h4 style={{ marginBottom: "25px", paddingBottom: "0px", marginLeft: "15px" }}>Education</h4>
                                 <div class="row" style={{ width: "100%" }}>
                                     {educationDetails}
                                 </div>
                             </Card>
-                            <Card style={{ marginBottom: "0px", paddingBottom: "10px", paddingTop: "15px" }}>
+                            <Card style={{ marginBottom: "15px", paddingBottom: "10px", paddingTop: "15px" }}>
                                 <h4 style={{ marginBottom: "25px", paddingBottom: "0px", marginLeft: "15px" }}>Work & Volunteer Experience</h4>
                                 <div class="row" style={{ width: "100%" }}>
                                     {experienceDetails}

@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import moment from 'moment';
-import Avatar from '@material-ui/core/Avatar';
 import _ from "lodash";
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography'
-import SchoolIcon from '@material-ui/icons/School';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import EditIcon from '@material-ui/icons/Edit';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import PhoneIcon from '@material-ui/icons/Phone';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ProfileCard from './profileCard';
+import SkillCard from './skillCard';
+import EducationCard from './educationCard';
+import ExperienceCard from './experienceCard';
 
 class StudentProfile extends Component {
     constructor(props) {
@@ -107,7 +99,7 @@ class StudentProfile extends Component {
             )
         } else objectiveSave = null
         return (
-            <div style={{ marginTop: "30px" }}>
+            <div style={{ marginTop: "15px" }}>
                 <div className="container" style={{ width: "75%", height: "100%" }}>
                     <div class="row" style={{ width: "100%" }}>
                         <div class="col-md-4">
@@ -120,7 +112,7 @@ class StudentProfile extends Component {
 
                             <div class="row" >
                                 <div class="col-md-12">
-                                    Skills {/* <SkillsCard /> */}
+                                    <SkillCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
 
@@ -156,13 +148,13 @@ class StudentProfile extends Component {
 
                             <div class="row" >
                                 <div class="col-md-12">
-                                    Education {/* <Education /> */}
+                                    <EducationCard student={this.state.student} />
                                 </div>
                             </div>
 
                             <div class="row" >
                                 <div class="col-md-12">
-                                    Experience {/* <Experience /> */}
+                                    <ExperienceCard student={this.state.student} />
                                 </div>
                             </div>
 
