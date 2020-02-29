@@ -348,13 +348,22 @@ app.put('/student/:id/profile', async (request, response) => {
             var query = 'update student set career_objective=? where id=?'
             var rows = await pool.query(query, [request.body.objective, request.params.id]);
         }
-        if (!_.isUndefined(request.body.contact_name)) {
-            var query = 'update company set contact_name=?,contact_num=?,contact_email=? where id=?'
+        if (!_.isUndefined(request.body.education)) {
+            var query = 'update education set contact_name=?,contact_num=?,contact_email=? where id=?'
+            var rows = await pool.query(query, [request.body.contact_name, request.body.contact_num, request.body.contact_email, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.experience)) {
+            var query = 'update experience set contact_name=?,contact_num=?,contact_email=? where id=?'
             var rows = await pool.query(query, [request.body.contact_name, request.body.contact_num, request.body.contact_email, request.params.id]);
         }
         if (!_.isUndefined(request.body.name)) {
-            var query = 'update company set name=?,location=? where id=?'
-            var rows = await pool.query(query, [request.body.name, request.body.location, request.params.id]);
+            var query = 'update student set name=? where id=?'
+            var rows = await pool.query(query, [request.body.name, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.skills)) {
+            console.log(request.body.skills)
+            var query = 'update student set skills=? where id=?'
+            var rows = await pool.query(query, [request.body.skills, request.params.id]);
         }
         logger.debug("Response from DB:" + JSON.stringify(rows))
         return response.json({ "message": "Update Success" }).status(200);

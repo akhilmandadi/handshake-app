@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
 import _ from "lodash";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography'
-import SchoolIcon from '@material-ui/icons/School';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import EditIcon from '@material-ui/icons/Edit';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import PhoneIcon from '@material-ui/icons/Phone';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: "",
+            student: {},
+            education: [],
             enableProfileSave: false,
         }
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
@@ -29,11 +23,14 @@ class ProfileCard extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            name: nextProps.student.name
+            name: nextProps.student.name,
+            student: nextProps.student,
+            education: nextProps.student.education
         })
     }
 
     profileSaveHandler = (event) => {
+        event.preventDefault();
         let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
@@ -42,24 +39,24 @@ class ProfileCard extends Component {
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
-                        enableObjectiveSave: false
+                        enableProfileSave: false
                     })
                 } else {
                     this.setState({
-                        enableObjectiveSave: true
+                        enableProfileSave: true
                     })
                 }
             })
             .catch((error) => {
                 this.setState({
-                    enableObjectiveSave: true
+                    enableProfileSave: true
                 })
             });
     }
 
     enableProfileEdit = () => {
         this.setState({
-            enableProfileSave: true
+            enableProfileSave: !this.state.enableProfileSave
         })
     }
 
@@ -71,20 +68,38 @@ class ProfileCard extends Component {
 
     render() {
         let profileInfo = null;
+        let name = "";
+        if (this.state.name !== "") {
+            name = this.state.name.split(" ")
+            if (name.length > 1) name = name[0].substr(0, 1) + name[1].substr(0, 1)
+            else name = name[0].substr(0, 1)
+        }
         if (!this.state.enableProfileSave) {
             profileInfo = (
-                <CardContent style={{ textAlign: "-webkit-right" }} >
+                <CardContent style={{ textAlign: "-webkit-right", paddingTop: "10px" }} >
                     <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                     <div style={{ textAlign: "-webkit-center" }}>
-                        <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "orange" }}>
-                            <h3>{this.props.student.name}</h3>
+                        <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                            <h1>{name}</h1>
                         </Avatar>
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
-                        <h3>{this.props.student.name}</h3>
+                        <h3>{this.state.name}</h3>
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
-                        <LocationOnIcon style={{ fontSize: 30, display: "inline", paddingTop: "10px" }} color="primary" /><h4 style={{ display: "inline", paddingBottom: "90px" }}>{this.props.student.college}</h4>
+                        <h4 style={{ display: "inline", paddingBottom: "90px" }}>
+                            {this.props.student.college}
+                        </h4>
+                    </div>
+                    <div style={{ textAlign: "-webkit-center" }}>
+                        <h5 style={{}}>
+                            {this.state.education.length > 0 ? this.state.education[this.state.education.length - 1]["degree"] + ", " + this.state.education[this.state.education.length - 1]["major"] : "-"}
+                        </h5>
+                    </div>
+                    <div style={{ textAlign: "-webkit-center" }}>
+                        <h5 style={{}}>
+                            {this.state.education.length > 0 ? this.state.education[this.state.education.length - 1]["degree"] + " - GPA: " + this.state.education[this.state.education.length - 1]["cgpa"] : "-"}
+                        </h5>
                     </div>
                     <div style={{ textAlign: "-webkit-center", marginTop: "10px" }}>
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><h5 style={{ display: "inline", paddingBottom: "90px" }}> {this.props.student.email}</h5>
@@ -105,8 +120,13 @@ class ProfileCard extends Component {
                                 <label for="name">Name</label>
                                 <input required onChange={this.nameChangeHandler} value={this.state.name} type="text" class="form-control" id="name" aria-describedby="name" placeholder=""></input>
                             </div>
-                            <div class="col-md-12" style={{ textAlign: "-webkit-right", marginTop: "10px" }}>
-                                <button type="submit" style={{ backgroundColor: "#0d7f02" }} class="btn btn-success" >Save</button>
+                            <div className="row" style={{ marginLeft: "0px", marginRight: "0px" }}>
+                                <div class="col-md-6" style={{ textAlign: "-webkit-center", marginTop: "10px", paddingRight: "3px" }}>
+                                    <button type="button" onClick={this.enableProfileEdit} style={{ backgroundColor: "rgba(0,0,0,.06)", width: "100%", color: "black" }} class="btn btn-secondary" >Cancel</button>
+                                </div>
+                                <div class="col-md-6" style={{ textAlign: "-webkit-center", marginTop: "10px", paddingLeft: "3px" }}>
+                                    <button type="submit" style={{ backgroundColor: "#0d7f02", width: "100%" }} class="btn btn-success" >Save</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -115,7 +135,7 @@ class ProfileCard extends Component {
         }
         return (
             <div style={{}}>
-                <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
+                <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px", marginTop: "0px" }}>
                     {profileInfo}
                 </Card>
             </div >
