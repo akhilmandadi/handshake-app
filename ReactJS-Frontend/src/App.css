@@ -37,12 +37,21 @@
   }
 }
 
+.nav > li > a:hover{
+  border-bottom: 2px solid #444;
+  background-color: white;
+} 
+.nav > li > a{
+  border-bottom: 2px solid white;
+  background-color: white;
+} 
+
 /* .nav > li > a:hover{
   background-color:black;
   color: black;
-} */
+}  */
 
-/* .nav > li > a:visited{
+ /* .nav > li > a:visited{
   background-color:black;
   color: black;
 } */
@@ -74,4 +83,8 @@
 
 .editicon:hover{
   background-color:#e8e9eb;
+}
+
+.addSchool{
+  color: green;
 }

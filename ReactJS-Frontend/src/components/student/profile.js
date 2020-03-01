@@ -7,6 +7,7 @@ import ProfileCard from './profileCard';
 import SkillCard from './skillCard';
 import EducationCard from './educationCard';
 import ExperienceCard from './experienceCard';
+import PersonalInfoCard from './personalInfoCard';
 
 class StudentProfile extends Component {
     constructor(props) {
@@ -116,13 +117,19 @@ class StudentProfile extends Component {
                                 </div>
                             </div>
 
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <PersonalInfoCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
+                                </div>
+                            </div>
+
                         </div>
                         <div class="col-md-8">
 
                             <div class="row" >
                                 <div class="col-md-12">
                                     <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
-                                        <h4 style={{ marginBottom: "15px", paddingBottom: "0px", marginLeft: "15px" }}>Objective</h4>
+                                        <h4 style={{ marginBottom: "15px", paddingBottom: "0px", marginLeft: "15px" }}>My Journey</h4>
                                         <div class="row" style={{ width: "100%" }}>
                                             <div class="col-md-12" style={{ marginBottom: "10px", marginLeft: "15px" }}>
                                                 <span style={{ color: "#1569e0" }}>What are you passionate about? What are you looking for on Handshake?
@@ -148,13 +155,13 @@ class StudentProfile extends Component {
 
                             <div class="row" >
                                 <div class="col-md-12">
-                                    <EducationCard student={this.state.student} />
+                                    <EducationCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
 
                             <div class="row" >
                                 <div class="col-md-12">
-                                    <ExperienceCard student={this.state.student} />
+                                    <ExperienceCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
 

@@ -15,10 +15,13 @@ class ProfileCard extends Component {
             student: {},
             education: [],
             enableProfileSave: false,
+            color:"white"
         }
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
         this.enableProfileEdit = this.enableProfileEdit.bind(this)
         this.nameChangeHandler = this.nameChangeHandler.bind(this)
+        this.mouseInListener = this.mouseInListener.bind(this)
+        this.mouseOutListener = this.mouseOutListener.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -66,6 +69,14 @@ class ProfileCard extends Component {
         })
     }
 
+    mouseInListener = () => {
+        this.setState({ color: "#3f51b5" })
+    }
+
+    mouseOutListener = () => {
+        this.setState({ color: "white" })
+    }
+
     render() {
         let profileInfo = null;
         let name = "";
@@ -77,7 +88,7 @@ class ProfileCard extends Component {
         if (!this.state.enableProfileSave) {
             profileInfo = (
                 <CardContent style={{ textAlign: "-webkit-right", paddingTop: "10px" }} >
-                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
+                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer",color:this.state.color }} />
                     <div style={{ textAlign: "-webkit-center" }}>
                         <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
                             <h1>{name}</h1>
@@ -100,9 +111,6 @@ class ProfileCard extends Component {
                         <h5 style={{}}>
                             {this.state.education.length > 0 ? this.state.education[this.state.education.length - 1]["degree"] + " - GPA: " + this.state.education[this.state.education.length - 1]["cgpa"] : "-"}
                         </h5>
-                    </div>
-                    <div style={{ textAlign: "-webkit-center", marginTop: "10px" }}>
-                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><h5 style={{ display: "inline", paddingBottom: "90px" }}> {this.props.student.email}</h5>
                     </div>
                 </CardContent>
             )
@@ -134,7 +142,7 @@ class ProfileCard extends Component {
             )
         }
         return (
-            <div style={{}}>
+            <div onMouseEnter={this.mouseInListener} onMouseLeave={this.mouseOutListener}>
                 <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px", marginTop: "0px" }}>
                     {profileInfo}
                 </Card>

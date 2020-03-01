@@ -49,7 +49,7 @@ class NavBar extends Component {
         return (
             <div>
                 {redirectVar}
-                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#fff", borderRadius: "0px", padding: "0px", margin: "0px" }}>
+                <nav class="navbar  navbar-dark bg-dark" style={{ backgroundColor: "#fff", borderRadius: "0px", padding: "0px", margin: "0px",paddingTop:"3px",paddingBottom:"3px" }}>
                     <div class="container-fluid">
                         <div class="navbar-header" style={{ display: "inline" }}>
                             <b class="navbar-brand" style={{ color: "black", display: "inline" }}><img style={{ display: "inline", width: "35px", height: "35px" }} src={logo} /> Handshake</b>
