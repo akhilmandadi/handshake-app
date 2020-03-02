@@ -2,79 +2,80 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
+import moment from "moment"
 import EditIcon from '@material-ui/icons/Edit';
-import Typography from '@material-ui/core/Typography';
-import SchoolIcon from '@material-ui/icons/School';
+import Typography from '@material-ui/core/Typography'
+import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import _ from 'lodash';
 
-class Education extends Component {
+class Experience extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            college_name: "",
-            degree: "",
-            major: "",
+            company: "",
+            title: "",
+            location: "",
             year_of_starting: "",
-            month_of_starting: "",
-            year_of_passing: "",
-            month_of_passing: "",
-            cgpa: "",
-            education: {},
+            month_of_starting: "01",
+            year_of_ending: "",
+            month_of_ending: "10",
+            description: "",
+            experience: {},
             enableEdit: false,
             id: "",
             color: "white"
         }
-        this.saveSchoolChanges = this.saveSchoolChanges.bind(this)
+        this.saveExperienceChanges = this.saveExperienceChanges.bind(this)
         this.enableEdit = this.enableEdit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.deleteSchool = this.deleteSchool.bind(this)
+        this.deleteExperience = this.deleteExperience.bind(this)
         this.mouseInListener = this.mouseInListener.bind(this)
         this.mouseOutListener = this.mouseOutListener.bind(this)
     }
 
     componentDidMount() {
         this.setState({
-            college_name: this.props.education.college_name,
-            degree: this.props.education.degree,
-            major: this.props.education.major,
-            year_of_starting: this.props.education.year_of_starting,
-            month_of_starting: this.props.education.month_of_starting,
-            year_of_passing: this.props.education.year_of_passing,
-            month_of_passing: this.props.education.month_of_passing,
-            cgpa: this.props.education.cgpa,
-            id: this.props.education.id,
-            education: this.props.education
+            company: this.props.experience.company,
+            title: this.props.experience.title,
+            location: this.props.experience.location,
+            year_of_starting: this.props.experience.year_of_starting,
+            month_of_starting: this.props.experience.month_of_starting,
+            year_of_ending: this.props.experience.year_of_ending,
+            month_of_ending: this.props.experience.month_of_ending,
+            description: this.props.experience.description,
+            id: this.props.experience.id,
+            experience: this.props.experience
         })
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            college_name: nextProps.education.college_name,
-            degree: nextProps.education.degree,
-            major: nextProps.education.major,
-            year_of_starting: nextProps.education.year_of_starting,
-            month_of_starting: nextProps.education.month_of_starting,
-            year_of_passing: nextProps.education.year_of_passing,
-            month_of_passing: nextProps.education.month_of_passing,
-            cgpa: nextProps.education.cgpa,
-            id: nextProps.education.id,
-            education: nextProps.education
+            company: nextProps.experience.company,
+            title: nextProps.experience.title,
+            location: nextProps.experience.location,
+            year_of_starting: nextProps.experience.year_of_starting,
+            month_of_starting: nextProps.experience.month_of_starting,
+            year_of_ending: nextProps.experience.year_of_ending,
+            month_of_ending: nextProps.experience.month_of_ending,
+            description: nextProps.experience.description,
+            id: nextProps.experience.id,
+            experience: nextProps.experience
         })
     }
 
-    saveSchoolChanges = (event) => {
+    saveExperienceChanges = (event) => {
         event.preventDefault();
         let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
-            college_name: this.state.college_name,
-            degree: this.state.degree,
-            major: this.state.major,
+            company: this.state.company,
+            title: this.state.title,
+            location: this.state.location,
             year_of_starting: this.state.year_of_starting,
             month_of_starting: this.state.month_of_starting,
-            year_of_passing: this.state.year_of_passing,
-            month_of_passing: this.state.month_of_passing,
-            cgpa: this.state.cgpa,
+            year_of_ending: this.state.year_of_ending,
+            month_of_ending: this.state.month_of_ending,
+            description: this.state.description,
             id: this.state.id
         })
             .then(response => {
@@ -92,9 +93,9 @@ class Education extends Component {
             });
     }
 
-    deleteSchool = (event) => {
+    deleteExperience = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile?entity=education&id=' + this.state.id;
+        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile?entity=experience&id=' + this.state.id;
         axios.defaults.withCredentials = true;
         axios.delete(url)
             .then(response => {
@@ -120,16 +121,16 @@ class Education extends Component {
 
     cancelEdit = () => {
         this.setState({
-            college_name: this.props.education.college_name,
-            degree: this.props.education.degree,
-            major: this.props.education.major,
-            year_of_starting: this.props.education.year_of_starting,
-            month_of_starting: this.props.education.month_of_starting,
-            year_of_passing: this.props.education.year_of_passing,
-            month_of_passing: this.props.education.month_of_passing,
-            cgpa: this.props.education.cgpa,
-            id: this.props.education.id,
-            education: this.props.education,
+            company: this.props.experience.company,
+            title: this.props.experience.title,
+            location: this.props.experience.location,
+            year_of_starting: this.props.experience.year_of_starting,
+            month_of_starting: this.props.experience.month_of_starting,
+            year_of_ending: this.props.experience.year_of_ending,
+            month_of_ending: this.props.experience.month_of_ending,
+            description: this.props.experience.description,
+            id: this.props.experience.id,
+            experience: this.props.experience,
             enableEdit: false
         })
     }
@@ -147,44 +148,44 @@ class Education extends Component {
     }
 
     render() {
+        var starts = moment(this.state.year_of_starting + '-' + this.state.month_of_starting + '-01');
+        var ends = moment(this.state.year_of_ending + '-' + this.state.month_of_ending + '-01');
+        var expYears = moment.duration(ends.diff(starts))._data.years
+        var expMonths = moment.duration(ends.diff(starts))._data.months + 2
         const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         let educationDetails = null;
         if (!this.state.enableEdit) {
             educationDetails = (
                 <div class="row" key={this.state.id} style={{ paddingLeft: "15px" }} onMouseEnter={this.mouseInListener} onMouseLeave={this.mouseOutListener}>
-                    <div class="row" style={{ paddingLeft: "30px", marginBottom: "0px" ,cursor:"pointer"}} onClick={this.enableEdit}>
+                    <div class="row" style={{ paddingLeft: "30px", marginBottom: "0px", cursor: "pointer" }} onClick={this.enableEdit}>
                         <div class="col-md-1" style={{ marginLeft: "15px", paddingRight: "0px", marginRight: "0px" }}>
                             <Avatar variant="square" style={{ width: "50px", height: "50px", backgroundColor: "white", color: "black", border: "2px solid", borderStyle: "groove" }}>
-                                <h6><SchoolIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
+                                <h6><LaptopMacIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
                             </Avatar>
                         </div>
                         <div class="col-md-8" style={{ marginLeft: "30px" }}>
-                            <div class="row" style={{paddingBottom:"5px"}}>
+                            <div class="row" style={{ paddingBottom: "5px" }}>
                                 <Typography variant="h4" color="textPrimary">
-                                    <h4 style={{ margin: "0px" }}> {this.state.college_name}</h4>
+                                    <h4 style={{ margin: "0px" }}> {this.state.title}</h4>
                                 </Typography>
                             </div>
                             <div class="row">
                                 <Typography variant="h6" color="inherit">
-                                    {this.state.degree}
+                                    {this.state.company}
                                 </Typography>
                             </div>
                             <div class="row">
-                                <Typography variant="h6" color="inherit">
+                                <Typography variant="h6" color="inherit" >
                                     {months[this.state.month_of_starting]}&nbsp;
                                             {this.state.year_of_starting} to&nbsp;
-                                            {months[this.state.month_of_passing]}&nbsp;
-                                            {this.state.year_of_passing}
+                                            {months[this.state.month_of_ending]}&nbsp;
+                                            {this.state.year_of_ending}&nbsp;
+                                            ({expYears === 0 ? expMonths + ' months' : expYears + ' year, ' + expMonths + ' months'})
                                 </Typography>
                             </div>
                             <div class="row" >
-                                <b>Major in </b><Typography style={{ display: "inline" }} variant="h6" color="inherit">
-                                    {this.state.major}
-                                </Typography>
-                            </div>
-                            <div class="row" >
-                                <b>Cumulative GPA: </b><Typography style={{ display: "inline" }} variant="h6" color="inherit">
-                                    {this.state.cgpa}
+                                <b></b><Typography style={{ display: "inline" }} variant="h6" color="inherit">
+                                    {this.state.description}
                                 </Typography>
                             </div>
                         </div>
@@ -196,24 +197,24 @@ class Education extends Component {
             )
         } else {
             educationDetails = (
-                <div class="row" style={{ paddingLeft: "15px", marginBottom: "20px", marginTop: "0px" }}>
-                    <form onSubmit={this.saveSchoolChanges}>
-                        <div class="col-md-1" style={{ marginLeft: "30px", paddingRight: "0px", marginRight: "0px" }}>
+                <div class="row" style={{ paddingLeft: "30px", marginBottom: "20px", marginTop: "0px" }}>
+                    <form onSubmit={this.saveExperienceChanges}>
+                        <div class="col-md-1" style={{ marginLeft: "15px", paddingRight: "0px", marginRight: "0px" }}>
                             <Avatar variant="square" style={{ width: "50px", height: "50px", backgroundColor: "white", color: "black", border: "2px solid", borderStyle: "groove" }}>
-                                <h6><SchoolIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
+                                <h6><LaptopMacIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
                             </Avatar>
                         </div>
-                        <div class="col-md-9" style={{ marginLeft: "20px" }}>
+                        <div class="col-md-10" style={{ marginLeft: "20px" }}>
                             <div class="row">
                                 <div class="col-md-11" style={{ marginBottom: "10px" }}>
-                                    <label for="contactEmail">School Name</label>
-                                    <input required onChange={this.handleChange} value={this.state.college_name} type="text" class="form-control" name="college_name" id="college_name"></input>
+                                    <label for="contactEmail">Job Title</label>
+                                    <input required onChange={this.handleChange} value={this.state.title} type="text" class="form-control" name="title" id="title"></input>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-11" style={{ marginBottom: "10px" }}>
-                                    <label htmlFor="contactEmail">Education Level</label>
-                                    <input required onChange={this.handleChange} value={this.state.degree} type="text" class="form-control" id="degree" name="degree"></input>
+                                    <label htmlFor="contactEmail">Employer</label>
+                                    <input required onChange={this.handleChange} value={this.state.company} type="text" class="form-control" id="company" name="company"></input>
                                 </div>
                             </div>
                             <div class="row" style={{ paddingRight: "40px" }}>
@@ -222,7 +223,7 @@ class Education extends Component {
                                     <div className="col-md-6" style={{ paddingRight: "0px", marginRight: "0px" }}>
                                         <label htmlFor="contactEmail">Start Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required value={this.state.month_of_starting} id="month_of_starting" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_starting">
+                                            <select required value={this.state.month_of_starting} id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_starting">
                                                 <option selected value={"1"} id="1">January</option>
                                                 <option value={"2"} id="2">February</option>
                                                 <option value={"3"} id="3">March</option>
@@ -242,8 +243,8 @@ class Education extends Component {
                                     <div className="col-md-6" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
                                         <label htmlFor="contactEmail">End Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required value={this.state.month_of_passing} id="month_of_passing" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_passing">
-                                                <option selected value={"01"} id="01">January</option>
+                                            <select required value={this.state.month_of_ending} id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_ending">
+                                                <option selected value={"1"} id="1">January</option>
                                                 <option value={"2"} id="2">February</option>
                                                 <option value={"3"} id="3">March</option>
                                                 <option value={"4"} id="4">April</option>
@@ -256,26 +257,35 @@ class Education extends Component {
                                                 <option value={"11"} id="11">November</option>
                                                 <option value={"12"} id="12">December</option>
                                             </select>
-                                            <input required style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.year_of_passing} type="number" class="form-control" id="year_of_passing" name="year_of_passing"></input>
+                                            <input required style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.year_of_ending} type="number" class="form-control" id="year_of_ending" name="year_of_ending"></input>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-11" style={{ marginBottom: "10px" }}>
-                                    <label htmlFor="contactEmail">Major</label>
-                                    <input required onChange={this.handleChange} value={this.state.major} type="text" class="form-control" id="major" name="major"></input>
+                                    <label htmlFor="contactEmail">Location</label>
+                                    <input required onChange={this.handleChange} value={this.state.location} type="text" class="form-control" id="location" name="location"></input>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-11" style={{ marginBottom: "10px" }}>
-                                    <label htmlFor="contactEmail">GPA</label>
-                                    <input required onChange={this.handleChange} value={this.state.cgpa} type="number" class="form-control" id="cgpa" name="cgpa"></input>
+                                    <label htmlFor="contactEmail">Description</label>
+                                    <textarea
+                                        class="form-control"
+                                        id="description"
+                                        rows="4"
+                                        style={{ marginTop: "10px" }}
+                                        onChange={this.handleChange}
+                                        name="description"
+                                        value={this.state.description}
+                                    >
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-2" style={{ textAlign: "-webkit-left", marginTop: "10px", marginRight: "30px" }}>
-                                    <button type="button" onClick={this.deleteSchool} style={{ backgroundColor: "#d6242a", color: "white" }} class="btn btn-secondary" >Delete</button>
+                                    <button type="button" onClick={this.deleteExperience} style={{ backgroundColor: "#d6242a", color: "white" }} class="btn btn-secondary" >Delete</button>
                                 </div>
                                 <div class="col-md-8" style={{ textAlign: "-webkit-right", marginTop: "10px", marginRight: "30px" }}>
                                     <button type="button" onClick={this.cancelEdit} style={{ backgroundColor: "rgba(0,0,0,.06)", color: "black" }} class="btn btn-secondary" >Cancel</button>
@@ -299,4 +309,4 @@ class Education extends Component {
     }
 }
 
-export default Education;
+export default Experience;

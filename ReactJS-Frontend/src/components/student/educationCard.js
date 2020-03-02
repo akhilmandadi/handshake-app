@@ -4,7 +4,6 @@ import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import _ from "lodash";
 import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography'
 import SchoolIcon from '@material-ui/icons/School';
 import Education from './education';
 
@@ -108,14 +107,14 @@ class EducationCard extends Component {
         let addSchool = null;
         if (this.state.addSchool) {
             addSchool = (
-                <div class="row" style={{ paddingLeft: "30px", marginBottom: "20px", marginTop: "30px" }}>
+                <div class="row" style={{ paddingLeft: "5px", marginBottom: "20px", marginTop: "30px" }}>
                     <form onSubmit={this.addNewSchool}>
                         <div class="col-md-1" style={{ marginLeft: "15px", paddingRight: "0px", marginRight: "0px" }}>
                             <Avatar variant="square" style={{ width: "50px", height: "50px", backgroundColor: "white", color: "black", border: "2px solid", borderStyle: "groove" }}>
                                 <h6><SchoolIcon style={{ fontSize: 35, color: "#2c347a" }} /></h6>
                             </Avatar>
                         </div>
-                        <div class="col-md-10" style={{ marginLeft: "30px" }}>
+                        <div class="col-md-10" style={{ marginLeft: "20px" }}>
                             <div class="row">
                                 <div class="col-md-11" style={{ marginBottom: "10px" }}>
                                     <label for="contactEmail">School Name</label>

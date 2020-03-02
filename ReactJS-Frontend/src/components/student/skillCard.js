@@ -117,7 +117,7 @@ class SkillCard extends Component {
                                 {skillsChips}
                             </div>
                             <div className="row">
-                                <div class="col-md-9" style={{ marginRight: "0px", paddingRight: "3px" }}>
+                                <div class="col-md-8" style={{ marginRight: "0px", paddingRight: "7px" }}>
                                     <input required onChange={this.skillChangeHandler} value={this.state.newSkill} type="text" class="form-control" id="name" aria-describedby="name" placeholder="Add more skills"></input>
                                 </div>
                                 <div class="col-md-3" style={{ textAlign: "-webkit-center", marginLeft: "0px", paddingLeft: "0px" }}>

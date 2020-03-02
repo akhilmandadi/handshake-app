@@ -104,28 +104,23 @@ class StudentProfile extends Component {
                 <div className="container" style={{ width: "75%", height: "100%" }}>
                     <div class="row" style={{ width: "100%" }}>
                         <div class="col-md-4">
-
                             <div class="row" >
                                 <div class="col-md-12">
                                     <ProfileCard student={this.state.student} />
                                 </div>
                             </div>
-
                             <div class="row" >
                                 <div class="col-md-12">
                                     <SkillCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
-
                             <div className="row">
                                 <div className="col-md-12">
                                     <PersonalInfoCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-md-8">
-
                             <div class="row" >
                                 <div class="col-md-12">
                                     <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
@@ -152,19 +147,16 @@ class StudentProfile extends Component {
                                     </Card>
                                 </div>
                             </div>
-
                             <div class="row" >
                                 <div class="col-md-12">
                                     <EducationCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
-
                             <div class="row" >
                                 <div class="col-md-12">
                                     <ExperienceCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div >
