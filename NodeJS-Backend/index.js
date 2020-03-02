@@ -349,14 +349,14 @@ app.put('/student/:id/profile', async (request, response) => {
             var rows = await pool.query(query, [request.body.objective, request.params.id]);
         }
         if (!_.isUndefined(request.body.college_name)) {
-            console.log(request.body)
             const { college_name, degree, major, month_of_starting, year_of_starting, month_of_passing, year_of_passing, cgpa, id } = request.body
             var query = 'update education set college_name=?,degree=?,major=?,month_of_starting=?,year_of_starting=?,month_of_passing=?,year_of_passing=?,cgpa=? where id=?'
             var rows = await pool.query(query, [college_name, degree, major, month_of_starting, year_of_starting, month_of_passing, year_of_passing, cgpa, id]);
         }
-        if (!_.isUndefined(request.body.experience)) {
-            var query = 'update experience set contact_name=?,contact_num=?,contact_email=? where id=?'
-            var rows = await pool.query(query, [request.body.contact_name, request.body.contact_num, request.body.contact_email, request.params.id]);
+        if (!_.isUndefined(request.body.company)) {
+            const { company, title, location, year_of_starting, month_of_starting, year_of_ending, month_of_ending, description, id } = request.body
+            var query = 'update experience set company=?, title=?, location=?, year_of_starting=?, month_of_starting=?, year_of_ending=?, month_of_ending=?, description=? where id=?'
+            var rows = await pool.query(query, [company, title, location, year_of_starting, month_of_starting, year_of_ending, month_of_ending, description, id]);
         }
         if (!_.isUndefined(request.body.name)) {
             var query = 'update student set name=? where id=?'
@@ -387,6 +387,11 @@ app.post('/student/:id/profile', async (request, response) => {
             const { college_name, degree, major, month_of_starting, year_of_starting, month_of_passing, year_of_passing, cgpa } = request.body.education
             var query = 'insert into education(id,college_name,degree,major,month_of_starting,year_of_starting,month_of_passing,year_of_passing,cgpa,student_id) values(?,?,?,?,?,?,?,?,?,?);'
             var rows = await pool.query(query, [uuid.generate(), college_name, degree, major, month_of_starting, year_of_starting, month_of_passing, year_of_passing, cgpa, request.params.id]);
+        }
+        if (!_.isUndefined(request.body.experience)) {
+            const { company, title, location, year_of_starting, month_of_starting, year_of_ending, month_of_ending, description } = request.body.experience
+            var query = 'insert into experience(id,company, title, location, year_of_starting,month_of_starting,year_of_ending,month_of_ending, description,student_id) values(?,?,?,?,?,?,?,?,?,?);'
+            var rows = await pool.query(query, [uuid.generate(), company, title, location, year_of_starting, month_of_starting, year_of_ending, month_of_ending, description, request.params.id]);
         }
         logger.debug("Response from DB:" + JSON.stringify(rows))
         return response.json({ "message": "Save Success" }).status(200);

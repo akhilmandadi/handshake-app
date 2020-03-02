@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import Avatar from '@material-ui/core/Avatar';
 import _ from "lodash";
 import moment from "moment"
 import Card from '@material-ui/core/Card';
@@ -9,7 +8,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import Typography from '@material-ui/core/Typography'
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PhoneIcon from '@material-ui/icons/Phone';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import CakeIcon from '@material-ui/icons/Cake';
 import HomeIcon from '@material-ui/icons/Home';
 
@@ -23,14 +21,11 @@ class PersonalInfoCard extends Component {
             state: "",
             country: "",
             dob: "",
-            enableProfileSave: false,
-            color: "white"
+            enableProfileSave: false
         }
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
         this.enableEdit = this.enableEdit.bind(this)
         this.handleChange=this.handleChange.bind(this)
-        this.mouseInListener = this.mouseInListener.bind(this)
-        this.mouseOutListener = this.mouseOutListener.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -87,14 +82,6 @@ class PersonalInfoCard extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    mouseInListener = () => {
-        this.setState({ color: "#3f51b5" })
-    }
-
-    mouseOutListener = () => {
-        this.setState({ color: "white" })
-    }
-
     render() {
         let profileSave = null;
         if (this.state.enableProfileSave) {
@@ -147,11 +134,11 @@ class PersonalInfoCard extends Component {
             profileSave = (
                 <div>
                     <div class="row" style={{ paddingTop: "10px", paddingRight: "10px" }}>
-                        <div class="col-md-10">
+                        <div class="col-md-9">
                             <h4 style={{ marginBottom: "15px", paddingBottom: "0px", marginLeft: "15px", marginTop: "0px" }}>Personal Information</h4>
                         </div>
-                        <div class="col-md-2" style={{ textAlign: "-webkit-center" }}>
-                            <EditIcon className="editicon" color="primary" onClick={this.enableEdit} style={{ textAlign: "-webkit-right", cursor: "pointer",color:this.state.color }} />
+                        <div class="col-md-2" style={{ textAlign: "-webkit-right",paddingLeft:"30px" }}>
+                            <EditIcon className="editicon" color="primary" onClick={this.enableEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                         </div>
                     </div>
                     <div class="row" style={{ paddingLeft: "15px" }}>
@@ -190,7 +177,7 @@ class PersonalInfoCard extends Component {
             )
         }
         return (
-            <div onMouseEnter={this.mouseInListener} onMouseLeave={this.mouseOutListener}>
+            <div>
                 <Card style={{ marginBottom: "15px", paddingBottom: "10px", paddingTop: "10px", marginTop: "0px", paddingLeft: "5px" }}>
                     <div class="row" style={{ width: "100%", marginLeft: "0px" }}>
                         {profileSave}

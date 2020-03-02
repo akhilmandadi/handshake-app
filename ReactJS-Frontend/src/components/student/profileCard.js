@@ -14,14 +14,11 @@ class ProfileCard extends Component {
             name: "",
             student: {},
             education: [],
-            enableProfileSave: false,
-            color:"white"
+            enableProfileSave: false
         }
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
         this.enableProfileEdit = this.enableProfileEdit.bind(this)
         this.nameChangeHandler = this.nameChangeHandler.bind(this)
-        this.mouseInListener = this.mouseInListener.bind(this)
-        this.mouseOutListener = this.mouseOutListener.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -69,14 +66,6 @@ class ProfileCard extends Component {
         })
     }
 
-    mouseInListener = () => {
-        this.setState({ color: "#3f51b5" })
-    }
-
-    mouseOutListener = () => {
-        this.setState({ color: "white" })
-    }
-
     render() {
         let profileInfo = null;
         let name = "";
@@ -88,7 +77,7 @@ class ProfileCard extends Component {
         if (!this.state.enableProfileSave) {
             profileInfo = (
                 <CardContent style={{ textAlign: "-webkit-right", paddingTop: "10px" }} >
-                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer",color:this.state.color }} />
+                    <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                     <div style={{ textAlign: "-webkit-center" }}>
                         <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
                             <h1>{name}</h1>
@@ -142,7 +131,7 @@ class ProfileCard extends Component {
             )
         }
         return (
-            <div onMouseEnter={this.mouseInListener} onMouseLeave={this.mouseOutListener}>
+            <div>
                 <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px", marginTop: "0px" }}>
                     {profileInfo}
                 </Card>
