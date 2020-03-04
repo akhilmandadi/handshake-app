@@ -93,12 +93,12 @@ class ProfileCard extends Component {
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
                         <h5 style={{}}>
-                            {this.state.education.length > 0 ? this.state.education[this.state.education.length - 1]["degree"] + ", " + this.state.education[this.state.education.length - 1]["major"] : "-"}
+                            {this.state.education.length > 0 ? this.state.education[0]["degree"] + ", " + this.state.education[0]["major"] : "-"}
                         </h5>
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
                         <h5 style={{}}>
-                            {this.state.education.length > 0 ? this.state.education[this.state.education.length - 1]["degree"] + " - GPA: " + this.state.education[this.state.education.length - 1]["cgpa"] : "-"}
+                            {this.state.education.length > 0 ? this.state.education[0]["degree"] + " - GPA: " + this.state.education[0]["cgpa"] : "-"}
                         </h5>
                     </div>
                 </CardContent>

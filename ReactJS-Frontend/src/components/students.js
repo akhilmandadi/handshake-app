@@ -2,22 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-import moment from 'moment';
 import TablePagination from '@material-ui/core/TablePagination';
-import SchoolIcon from '@material-ui/icons/School';
-import LocationCityIcon from '@material-ui/icons/LocationCity';
-import CakeIcon from '@material-ui/icons/Cake';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
-
+import Avatar from '@material-ui/core/Avatar';
 
 class Students extends Component {
     constructor(props) {
@@ -34,7 +28,7 @@ class Students extends Component {
         this.filterStudentSearch = this.filterStudentSearch.bind(this)
     }
     componentDidMount() {
-        let url = 'http://localhost:8080/students';
+        let url = 'http://localhost:8080/student/profiles';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -80,16 +74,19 @@ class Students extends Component {
         searchStr = searchStr.toLowerCase();
         return students.filter(function (student) {
             return Object.keys(student).some(function (attribute) {
-                if (student[attribute]) return student[attribute].toLowerCase().indexOf(searchStr) !== -1;
+                if (attribute !== "education" && attribute !== "experience") {
+                    if (student[attribute]) return student[attribute].toLowerCase().indexOf(searchStr) !== -1;
+                }
             });
         });
     }
 
     render() {
+        const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         return (
-            <div style={{marginTop:"20px"}}>
+            <div style={{ marginTop: "20px" }}>
                 <div className="container" style={{ width: "85%", align: "center" }}>
-                    <div style={{ alignContent: "center",marginBottom:"10px" }}><Paper component="form" style={{ padding: "2px 4px", display: "flex", alignItems: "center", width: "100%", alignContent: "center", border: "1px solid", borderRadius: "10px", backgroundColor: "#f0fffd" }}>
+                    <div style={{ alignContent: "center", marginBottom: "10px" }}><Paper component="form" style={{ padding: "2px 4px", display: "flex", alignItems: "center", width: "100%", alignContent: "center", border: "1px solid", borderRadius: "10px", backgroundColor: "" }}>
                         <InputBase
                             fullWidth
                             autofocus
@@ -114,28 +111,50 @@ class Students extends Component {
                     </Paper></div>
                     {this.state.students.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(student => {
                         return (
-                            <span style={{ padding: "0px" }}>
-                                <Card style={{  padding: "0px", margin: "4px" }}>
-                                    <CardContent style={{ paddingBottom: "5px" }}>
-                                        <Typography color="textSecondary" gutterBottom>
-                                            <Link to={'/students/' + student.id}><b>{student.name.toUpperCase()}</b></Link>
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                            <SchoolIcon /> {student.college}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                            <LocationCityIcon /> {!student.city ? "-" : student.city}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                            <CakeIcon /> {!student.dob ? "-" : moment(student.dob).format("MMMM Do YYYY")}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                            <LocationOnIcon /> {(!student.city && !student.country) ? "-" : student.city + "," + student.country}
-                                        </Typography>
-                                        <Typography color="textSecondary">
-                                            <AssignmentTurnedInIcon /> {!student.skills ? "-" : student.skills}
-                                        </Typography>
-                                    </CardContent>
+                            <span style={{ alignContent: "right", padding: "0px" }} key={student.id}>
+                                <Card style={{ padding: "0px", marginBottom: "7px", paddingBottom: "7px" }}>
+                                    <div class="row" style={{ width: "100%",paddingLeft:"10px" }}>
+                                        <div class="col-md-1" style={{ textAlign: "-webkit-center", float: "left", alignItems: "center", paddingRight: "0px", marginRight: "10px" }}>
+                                            <Avatar variant="circle" style={{ paddingRight: "0px", width: "50px", height: "50px", margin: "10px", backgroundColor: "brown" }}>
+                                                <b style={{ fontSize: "80" }}>{student.name.substring(0, 1)}</b>
+                                            </Avatar>
+                                        </div>
+                                        <div class="col-md-9" style={{ textAlign: "-webkit-left", paddingTop: "10px", marginLeft: "0px" }}>
+                                            <Typography gutterBottom variant="h5" style={{ marginBottom: "0px" }}>
+                                                <Link to={'/students/' + student.id} style={{ color: "black" }}><b>{student.name.toUpperCase()}</b></Link>
+                                            </Typography>
+                                            <Typography variant="h6">
+                                                {student.college}
+                                            </Typography>
+                                            <div className="row" >
+                                                <div className="col-md-6">
+                                                    <Typography variant="h6" style={{ verticalAlign: "center", marginBottom: "9px" }} style={{ fontWeight: "500" }}>
+                                                        {student.education.length === 0 ? "" : student.education[0].degree + ", " + months[student.education[0].month_of_passing] + " '" +
+                                                            (student.education[0].year_of_passing.toString()).substring(2, 4)}
+                                                    </Typography>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <Typography variant="h6" style={{ verticalAlign: "center", marginBottom: "9px" }} style={{ fontWeight: "500" }}>
+                                                        {student.education.length === 0 ? "" : student.education[0].major}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <Typography variant="h6" style={{ verticalAlign: "center" }} style={{ fontWeight: "500" }}>
+                                                {student.experience.length > 0 ? (
+                                                    student.experience.map(experience => {
+                                                        return (
+                                                            <p style={{ marginBottom: "0px" }}><span class="glyphicon glyphicon-briefcase"></span> {experience.title} at {experience.company}</p>
+                                                        )
+                                                    })
+                                                ) : (
+                                                        <b />
+                                                    )}
+                                            </Typography>
+                                            <Typography variant="h6">
+                                                <AssignmentTurnedInIcon/>Skills: {student.skills ? student.skills : " NA"}
+                                            </Typography>
+                                        </div>
+                                    </div>
                                 </Card>
                             </span>
                         );

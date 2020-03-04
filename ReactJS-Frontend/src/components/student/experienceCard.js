@@ -152,7 +152,7 @@ class ExperienceCard extends Component {
                                     <div className="col-md-6" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
                                         <label htmlFor="contactEmail">End Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_ending">
+                                            <select id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_ending">
                                                 <option selected value={"01"}>January</option>
                                                 <option value={"02"}>February</option>
                                                 <option value={"03"}>March</option>
@@ -166,7 +166,7 @@ class ExperienceCard extends Component {
                                                 <option value={"11"}>November</option>
                                                 <option value={"12"}>December</option>
                                             </select>
-                                            <input required style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.newExperience.year_of_ending} type="number" class="form-control" id="year_of_ending" name="year_of_ending"></input>
+                                            <input style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.newExperience.year_of_ending} type="number" class="form-control" id="year_of_ending" name="year_of_ending"></input>
                                         </div>
                                     </div>
                                 </div>
