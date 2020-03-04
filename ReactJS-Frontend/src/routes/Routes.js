@@ -17,6 +17,9 @@ import Registrations from "../components/registrations";
 import CompanyProfile from "../components/profile";
 import ViewCompanyProfile from "../components/student/companyProfile";
 import StudentProfile from "../components/student/profile";
+import EventsSearch from "../components/student/eventSearch";
+import EventDetails from "../components/student/event";
+import StudentRegistrations from "../components/student/registrations";
 
 class Routes extends Component {
     render() {
@@ -39,6 +42,9 @@ class Routes extends Component {
                 <Route path="/explore/students" exact component={StudentSearch} />
                 <Route path="/company/:companyId/profile" exact component={ViewCompanyProfile} />
                 <Route path="/student/profile" exact component={StudentProfile} />
+                <Route path="/events" exact component={EventsSearch} />
+                <Route path="/event/:id" exact component={EventDetails} />
+                <Route path="/student/:id/registrations" exact component={StudentRegistrations} />
             </div>
         )
     }

@@ -220,34 +220,6 @@ app.get('/jobs', async (request, response) => {
     }
 })
 
-app.get('/student/:studentId/registrations', async (request, response) => {
-    try {
-        var query = 'select c.name,j.location,j.title,j.deadline,a.status,a.id,a.applied_on from applications a left join jobs j on j.id=a.job_id left join company c on c.id=a.company_id where a.student_id=?';
-        var rows = await pool.query(query, [request.params.studentId]);
-        logger.debug("Response from DB:" + JSON.stringify(rows))
-        return response.json(rows).status(200);
-    } catch (ex) {
-        logger.error(JSON.stringify(ex))
-        let message = ex.message ? ex.message : 'Error while fetching applications details';
-        let code = ex.statusCode ? ex.statusCode : 500;
-        return response.status(code).json({ "message": message })
-    }
-});
-
-app.get('/events', async (request, response) => {
-    try {
-        var query = 'select j.id,j.title,j.posting_date,j.deadline, j.location,j.salary,j.description,j.category,j.company_id,c.name as company_name from jobs j,company c where c.id=j.company_id;'
-        var rows = await pool.query(query);
-        logger.debug("Response from DB:" + JSON.stringify(rows))
-        return response.json(rows).status(200);
-    } catch (ex) {
-        logger.error(JSON.stringify(ex))
-        let message = ex.message ? ex.message : 'Error while fetching jobs';
-        let code = ex.statusCode ? ex.statusCode : 500;
-        return response.status(code).json({ "message": message })
-    }
-})
-
 app.get('/company/:id/events', async (request, response) => {
     try {
         var query = 'SELECT id,name,date,time,location,eligibility,description,\'View Registrations\' as applicants from events where company_id=?';
@@ -303,20 +275,6 @@ app.put('/registrations/:registrationId', async (request, response) => {
         return response.status(code).json({ "message": message })
     }
 })
-
-app.get('/event/:eventId', async (request, response) => {
-    try {
-        var query = 'SELECT * from events where id=?';
-        var rows = await pool.query(query, [request.params.eventId]);
-        logger.debug("Response from DB:" + JSON.stringify(rows))
-        return response.json(rows).status(200);
-    } catch (ex) {
-        logger.error(JSON.stringify(ex))
-        let message = ex.message ? ex.message : 'Error while fetching event details';
-        let code = ex.statusCode ? ex.statusCode : 500;
-        return response.status(code).json({ "message": message })
-    }
-});
 
 app.put('/company/:id/profile', async (request, response) => {
     try {
@@ -427,16 +385,111 @@ app.get('/student/:id/profile', async (request, response) => {
     try {
         var queryForStudent = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=?';
         var studentInfo = await pool.query(queryForStudent, [request.params.id]);
-        var queryForEducation = 'select * from education where student_id=?';
+        var queryForEducation = 'select * from education where student_id=? order by year_of_passing DESC';
         var educationInfo = await pool.query(queryForEducation, [request.params.id]);
-        var queryForExperience = 'select * from experience where student_id=?';
+        var queryForExperience = 'select * from experience where student_id=? order by year_of_starting DESC';
         var experienceInfo = await pool.query(queryForExperience, [request.params.id]);
-        studentInfo[0].education = _.sortBy(educationInfo, ['year_of_passing']);
-        studentInfo[0].experience = _.sortBy(experienceInfo, ['start_date']);
+        studentInfo[0].education = educationInfo//_.sortBy(educationInfo, ['year_of_passing']);
+        studentInfo[0].experience = experienceInfo//_.sortBy(experienceInfo, ['start_date']);
         return response.json(studentInfo[0]).status(200);
     } catch (ex) {
         logger.error(JSON.stringify(ex))
         let message = ex.message ? ex.message : 'Error while fetching applications details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+let fetchProfileInfo = async (id) => {
+    var queryForStudent = 'SELECT id,name,email,college,city,dob,state,country,mobile,skills,career_objective from student where id=?';
+    var studentInfo = await pool.query(queryForStudent, [id]);
+    var queryForEducation = 'select * from education where student_id=? order by year_of_passing DESC';
+    var educationInfo = await pool.query(queryForEducation, [id]);
+    var queryForExperience = 'select * from experience where student_id=? order by year_of_starting DESC';
+    var experienceInfo = await pool.query(queryForExperience, [id]);
+    studentInfo[0].education = educationInfo
+    studentInfo[0].experience = experienceInfo
+    return studentInfo[0];
+}
+
+app.get('/student/profiles', async (request, response) => {
+    try {
+        var studentIds = 'SELECT id from student where id!=\'' + request.query.id+'\'';
+        if (_.isEmpty(request.query)) studentIds = 'SELECT id from student'
+        var idsToFetch = await pool.query(studentIds);
+        idsToFetch = JSON.stringify(idsToFetch)
+        let studentProfiles = []
+        for (const student of JSON.parse(idsToFetch)) {
+            let profile = await fetchProfileInfo(student.id)
+            studentProfiles.push(profile)
+        }
+        return response.json(studentProfiles).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching profile details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/events', async (request, response) => {
+    try {
+        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name from events e,company c where c.id=e.company_id;'
+        var rows = await pool.query(query);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching events';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/event/:id', async (request, response) => {
+    try {
+        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name from events e,company c where c.id=e.company_id and e.id=?'
+        var rows = await pool.query(query, [request.params.id]);
+        let status = ""
+        if (!_.isEmpty(request.query)) {
+            var registrationStatus = 'select * from registrations where student_id=? and event_id=?'
+            var studentStatus = await pool.query(registrationStatus, [request.query.studentId, request.params.id])
+            if (!_.isEmpty(studentStatus)) status = "Applied"
+            rows[0].status = status
+        }
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows[0]).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching event details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.post('/event/:eventId/register', async (request, response) => {
+    try {
+        var query = 'insert into registrations(id,student_id,company_id,event_id,registered_on) values(?,?,?,?,?)'
+        var rows = await pool.query(query, [uuid.generate(), request.body.studentId, request.body.companyId, request.params.eventId, new Date().toISOString().slice(0, 10)]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows[0]).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching event details';
+        let code = ex.statusCode ? ex.statusCode : 500;
+        return response.status(code).json({ "message": message })
+    }
+})
+
+app.get('/student/:studentId/registrations', async (request, response) => {
+    try {
+        var query = 'select c.name as company_name,e.location,e.name,e.date,e.time,e.location,r.id,r.registered_on from registrations r left join events e on e.id=r.event_id left join company c on c.id=r.company_id where r.student_id=?';
+        var rows = await pool.query(query, [request.params.studentId]);
+        logger.debug("Response from DB:" + JSON.stringify(rows))
+        return response.json(rows).status(200);
+    } catch (ex) {
+        logger.error(JSON.stringify(ex))
+        let message = ex.message ? ex.message : 'Error while fetching registrations details';
         let code = ex.statusCode ? ex.statusCode : 500;
         return response.status(code).json({ "message": message })
     }

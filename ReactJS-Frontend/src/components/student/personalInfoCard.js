@@ -36,7 +36,7 @@ class PersonalInfoCard extends Component {
             city: nextProps.student.city,
             state: nextProps.student.state,
             country: nextProps.student.country,
-            dob: nextProps.student.dob.substr(0,10),
+            dob: nextProps.student.dob,
         })
     }
 

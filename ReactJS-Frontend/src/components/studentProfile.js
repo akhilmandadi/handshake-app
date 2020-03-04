@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
 import axios from 'axios';
-import moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
 import _ from "lodash";
 import Card from '@material-ui/core/Card';
@@ -50,7 +49,7 @@ class StudentProfile extends Component {
     render() {
         let name = '\'' + this.state.student.name + '\'';
         let educationDetails = null;
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if (this.state.education.length > 0) {
             educationDetails = (
                 <div class="row">
@@ -120,9 +119,19 @@ class StudentProfile extends Component {
                                         </Typography>
                                     </div>
                                     <div class="row">
-                                        <Typography variant="h6" color="inherit">
-                                            {moment(this.state.experience[index]["start_date"]).format("MMMM YYYY")} to {this.state.experience[index]["end_date"] === null ? "Present" : this.state.experience[index]["end_date"]}
-                                        </Typography>
+                                        {this.state.year_of_ending !== "" ? (
+                                            <Typography variant="h6" color="inherit" >
+                                                {months[this.state.experience[index]["month_of_starting"]]}&nbsp;
+                                            {this.state.experience[index]["year_of_starting"]} to&nbsp;
+                                            {months[this.state.experience[index]["month_of_ending"]]}&nbsp;
+                                            {this.state.experience[index]["year_of_ending"]}&nbsp;
+                                </Typography>
+                                        ) : (
+                                                <Typography variant="h6" color="inherit" >
+                                                    {months[this.state.experience[index]["month_of_starting"]]}&nbsp;
+                                            {this.state.experience[index]["year_of_starting"]} to Present
+                                </Typography>
+                                            )}
                                     </div>
                                     <div class="row">
                                         <Typography variant="h6" color="inherit">
@@ -165,7 +174,7 @@ class StudentProfile extends Component {
                                     <div style={{ textAlign: "-webkit-center" }}>
                                         <Typography variant="h6">
                                             {(this.state.education.length) > 0 ?
-                                                this.state.education[this.state.education.length - 1]["degree"] + ", " + this.state.education[this.state.education.length - 1]["major"]
+                                                this.state.education[0]["degree"] + ", " + this.state.education[0]["major"]
                                                 : "-"}
                                         </Typography>
                                     </div>
@@ -179,7 +188,7 @@ class StudentProfile extends Component {
                             <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
                                 <h4 style={{ marginBottom: "25px", paddingBottom: "0px", marginLeft: "15px" }}>Objective</h4>
                                 <div class="row" style={{ width: "100%", marginLeft: "15px", marginBottom: "0px" }}>
-                                    <div class="col-md-12" style={{ textAlign: "-webkit-center" }}><h5 style={{marginTop: "0px"}}>
+                                    <div class="col-md-12" style={{ textAlign: "-webkit-center" }}><h5 style={{ marginTop: "0px" }}>
                                         {this.state.student.career_objective === null ? "Not Updated" : this.state.student.career_objective}
                                     </h5>
                                     </div>

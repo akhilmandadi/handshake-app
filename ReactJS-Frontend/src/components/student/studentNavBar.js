@@ -19,8 +19,8 @@ class StudentNavBar extends Component {
                     <ul class="nav navbar-nav">
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><Link to="/jobs" style={{ color: "black" }}><b><span class="glyphicon glyphicon-search"></span> Job Search</b></Link></li>
-                        <li><Link to={"/student/" + sessionStorage.getItem("id") + "/applications"} style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Applications</Link></li>
+                        <li><Link to="/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-search"></span> Job Search</Link></li>
+                        <li><Link to={"/student/" + sessionStorage.getItem("id") + "/applications"} style={{ color: "black" }}>Applications</Link></li>
                     </ul>
                 </div>
             )
@@ -33,8 +33,8 @@ class StudentNavBar extends Component {
                     <ul class="nav navbar-nav">
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><Link to="/profile" style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Events Search</Link></li>
-                        <li><Link to="/company/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Registrations</Link></li>
+                        <li><Link to="/events" style={{ color: "black" }}><span class="glyphicon glyphicon-search"></span> Events Search</Link></li>
+                        <li><Link to={"/student/" + sessionStorage.getItem("id") + "/registrations"} style={{ color: "black" }}>Registrations</Link></li>
                     </ul>
                 </div>
             )

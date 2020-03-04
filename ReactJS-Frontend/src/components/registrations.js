@@ -13,15 +13,6 @@ import Fab from "@material-ui/core/Fab";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
-import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 
 const columns = [
     { id: 'student_name', label: 'Student Name', minWidth: 100 },
@@ -36,30 +27,21 @@ class Registrations extends Component {
             applications: [],
             page: 0,
             rowsPerPage: 5,
-            enableCreate: false,
-            jobInfo: {},
-            isEditDialogOpen: false,
-            currentApplicationId: "",
-            statusesToShow: []
+            jobInfo: {}
         }
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-        this.updateStatusOfApplication = this.updateStatusOfApplication.bind(this);
-        this.toggleCreate = this.toggleCreate.bind(this);
-        this.enableEdit = this.enableEdit.bind(this);
-        this.handleEditDialogClose = this.handleEditDialogClose.bind(this);
     }
 
     componentDidMount() {
-        this.updateJobs();
+        this.fetchRegistrations();
         const { match: { params } } = this.props;
         axios.defaults.withCredentials = true;
         axios.get('http://localhost:8080/event/' + params.eventId)
             .then(response => {
                 if (response.status === 200) {
-                    console.log(response.data)
                     this.setState({
-                        jobInfo: response.data[0]
+                        jobInfo: response.data
                     })
                 } else {
                     this.setState({
@@ -86,46 +68,13 @@ class Registrations extends Component {
         })
     };
 
-    toggleCreate = () => {
-        this.setState({
-            enableCreate: !this.state.enableCreate
-        })
-    }
-
-    updateStatusOfApplication = (status) => {
-        // console.log("updateStateOfApplication");
-        // console.log(this.state.currentApplicationId)
-        // console.log(status)
-        // this.setState({
-        //     isEditDialogOpen: false
-        // })
-        // axios.put('http://localhost:8080/applications/' + this.state.currentApplicationId, { "status": status })
-        //     .then(response => {
-        //         if (response.status === 200) {
-        //             console.log(response.data)
-        //             this.updateJobs();
-        //         } else {
-        //             this.setState({
-        //                 //loader
-        //             })
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             //loader
-        //         })
-        //     });
-    }
-
-    updateJobs = () => {
+    fetchRegistrations = () => {
         const { match: { params } } = this.props;
         let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/event/' + params.eventId + '/applicants';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
-                    console.log(response.data)
-                    console.log("updated")
                     this.setState({
                         applications: response.data
                     })
@@ -142,27 +91,7 @@ class Registrations extends Component {
             });
     }
 
-    enableEdit = (id, status) => {
-        console.log("enableEdit")
-        console.log(id)
-        console.log(status)
-        this.setState({
-            currentApplicationId: id,
-            statusesToShow: ["Pending", "Reviewed", "Declined"].filter(x => ![status].includes(x)),
-            isEditDialogOpen: true
-        })
-    }
-
-    handleEditDialogClose = () => {
-        console.log("handleEditDialogClose")
-        this.setState({
-            currentApplicationId: "",
-            statusesToShow: [],
-            isEditDialogOpen: false
-        })
-    }
     render() {
-        let createDialog = null;
         let errorBanner = null;
         if (this.state.applications.length === 0) errorBanner = (<b>No Registrations for this Event</b>)
         let jobInfoTab = null;
@@ -180,22 +109,6 @@ class Registrations extends Component {
         }
         return (
             <div className="container" style={{ width: "85%", alignItems: "center", marginTop: "20px" }}>
-                <Dialog onClose={this.handleEditDialogClose} aria-labelledby="simple-dialog-title" open={this.state.isEditDialogOpen}>
-                    <DialogTitle id="simple-dialog-title">Update Status To</DialogTitle>
-                    <List>
-                        <Divider />
-                        {this.state.statusesToShow.map(status => (
-                            <ListItemAvatar>
-                                <ListItem style={{ textAlign: "center" }} button onClick={() => this.updateStatusOfApplication(status)} key={status} id={status}>
-                                    <ListItemText primary={status} />
-                                </ListItem><Divider /></ListItemAvatar>
-                        ))}
-                    </List>
-                    <div style={{ textAlign: "center" }}>
-                        <CancelPresentationIcon fontSize="large" style={{ backgroundColor: "red" }} onClick={this.handleEditDialogClose} />
-                    </div>
-                </Dialog>
-                {createDialog}
                 <div>
                     <Link to="/company/events">
                         <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >

@@ -18,7 +18,7 @@ class Experience extends Component {
             year_of_starting: "",
             month_of_starting: "01",
             year_of_ending: "",
-            month_of_ending: "10",
+            month_of_ending: "",
             description: "",
             experience: {},
             enableEdit: false,
@@ -175,13 +175,20 @@ class Experience extends Component {
                                 </Typography>
                             </div>
                             <div class="row">
-                                <Typography variant="h6" color="inherit" >
-                                    {months[this.state.month_of_starting]}&nbsp;
+                                {this.state.year_of_ending !== "" ? (
+                                    <Typography variant="h6" color="inherit" >
+                                        {months[this.state.month_of_starting]}&nbsp;
                                             {this.state.year_of_starting} to&nbsp;
                                             {months[this.state.month_of_ending]}&nbsp;
                                             {this.state.year_of_ending}&nbsp;
-                                            ({expYears === 0 ? expMonths + ' months' : expYears + ' year, ' + expMonths + ' months'})
+                                            ({expYears === 0 ? expMonths + ' months' : expYears + ' years, ' + expMonths + ' months'})}
                                 </Typography>
+                                ) : (
+                                        <Typography variant="h6" color="inherit" >
+                                            {months[this.state.month_of_starting]}&nbsp;
+                                            {this.state.year_of_starting} to Present
+                                </Typography>
+                                    )}
                             </div>
                             <div class="row" >
                                 <b></b><Typography style={{ display: "inline" }} variant="h6" color="inherit">
@@ -243,7 +250,7 @@ class Experience extends Component {
                                     <div className="col-md-6" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
                                         <label htmlFor="contactEmail">End Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required value={this.state.month_of_ending} id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_ending">
+                                            <select value={this.state.month_of_ending} id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_ending">
                                                 <option selected value={"1"} id="1">January</option>
                                                 <option value={"2"} id="2">February</option>
                                                 <option value={"3"} id="3">March</option>
@@ -257,7 +264,7 @@ class Experience extends Component {
                                                 <option value={"11"} id="11">November</option>
                                                 <option value={"12"} id="12">December</option>
                                             </select>
-                                            <input required style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.year_of_ending} type="number" class="form-control" id="year_of_ending" name="year_of_ending"></input>
+                                            <input style={{ width: "35%", marginRight: "5px" }} onChange={this.handleChange} value={this.state.year_of_ending} type="number" class="form-control" id="year_of_ending" name="year_of_ending"></input>
                                         </div>
                                     </div>
                                 </div>

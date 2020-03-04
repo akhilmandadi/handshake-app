@@ -8,10 +8,12 @@ class NavBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            studentNav: ["", "", "", "navVisited", ""]
+            studentNav: ["", "", "", "navVisited", ""],
+            companyNav: ["", "", "", "navVisited", ""]
         }
         this.handleLogout = this.handleLogout.bind(this);
         this.handleStudentNav = this.handleStudentNav.bind(this)
+        this.handleCompanyNav = this.handleCompanyNav.bind(this)
     }
     handleLogout = () => {
         sessionStorage.removeItem("persona");
@@ -24,16 +26,21 @@ class NavBar extends Component {
         studentNav[id] = "navVisited"
         this.setState({ studentNav: studentNav })
     }
+    handleCompanyNav = (id) => {
+        let companyNav = ["", "", "", "", ""]
+        companyNav[id] = "navVisited"
+        this.setState({ companyNav: companyNav })
+    }
 
     render() {
         let navBar = null;
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
             navBar = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to={"/company/profile"} style={{ color: "black" }}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
-                    <li><Link to="/company/jobs" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
-                    <li><Link to="/company/events" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Events</Link></li>
-                    <li><Link to="/students" style={{ color: "black" }}><span class="glyphicon glyphicon-"></span>Students</Link></li>
+                    <li><Link to={"/company/profile"} style={{ color: "black" }} className={this.state.companyNav[0]} onClick={() => this.handleCompanyNav(0)}><span class="glyphicon glyphicon-user"></span> Profile</Link></li>
+                    <li><Link to="/company/jobs" style={{ color: "black" }} className={this.state.companyNav[1]} onClick={() => this.handleCompanyNav(1)}><span class="glyphicon glyphicon-"></span>Jobs</Link></li>
+                    <li><Link to="/company/events" style={{ color: "black" }} className={this.state.companyNav[2]} onClick={() => this.handleCompanyNav(2)}><span class="glyphicon glyphicon-"></span>Events</Link></li>
+                    <li><Link to="/students" style={{ color: "black" }} className={this.state.companyNav[3]} onClick={() => this.handleCompanyNav(3)}><span class="glyphicon glyphicon-"></span>Students</Link></li>
                     <li><Link to="/signin" onClick={this.handleLogout} style={{ color: "black" }}><span class="glyphicon glyphicon-log-out"></span> Logout</Link></li>
                 </ul>
             )
