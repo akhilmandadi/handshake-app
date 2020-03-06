@@ -33,6 +33,12 @@ class Students extends Component {
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
+                    response.data.map(student => {
+                        if (student.image !== null) {
+                            var imageStr = this.arrayBufferToBase64(student.image.data);
+                            student.image = 'data:image/jpeg;base64,' + imageStr
+                        }
+                    })
                     this.setState({
                         students: response.data,
                         studentsFilter: response.data
@@ -51,6 +57,12 @@ class Students extends Component {
                 })
             });
     }
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
     handleChangePage = (event, newPage) => {
         this.setState({
             page: newPage
@@ -113,11 +125,15 @@ class Students extends Component {
                         return (
                             <span style={{ alignContent: "right", padding: "0px" }} key={student.id}>
                                 <Card style={{ padding: "0px", marginBottom: "7px", paddingBottom: "7px" }}>
-                                    <div class="row" style={{ width: "100%",paddingLeft:"10px" }}>
+                                    <div class="row" style={{ width: "100%", paddingLeft: "10px" }}>
                                         <div class="col-md-1" style={{ textAlign: "-webkit-center", float: "left", alignItems: "center", paddingRight: "0px", marginRight: "10px" }}>
-                                            <Avatar variant="circle" style={{ paddingRight: "0px", width: "50px", height: "50px", margin: "10px", backgroundColor: "brown" }}>
-                                                <b style={{ fontSize: "80" }}>{student.name.substring(0, 1)}</b>
-                                            </Avatar>
+                                            {student.image === null ? (
+                                                <Avatar variant="circle" style={{ paddingRight: "0px", width: "50px", height: "50px", margin: "10px", backgroundColor: "brown" }}>
+                                                    <b style={{ fontSize: "80" }}>{student.name.substring(0, 1)}</b>
+                                                </Avatar>
+                                            ) : (
+                                                    <Avatar variant="circle" src={student.image} style={{ paddingRight: "0px", width: "50px", height: "50px", margin: "10px", border: "0.5px solid" }} />
+                                                )}
                                         </div>
                                         <div class="col-md-9" style={{ textAlign: "-webkit-left", paddingTop: "10px", marginLeft: "0px" }}>
                                             <Typography gutterBottom variant="h5" style={{ marginBottom: "0px" }}>
@@ -151,7 +167,7 @@ class Students extends Component {
                                                     )}
                                             </Typography>
                                             <Typography variant="h6">
-                                                <AssignmentTurnedInIcon/>Skills: {student.skills ? student.skills : " NA"}
+                                                <AssignmentTurnedInIcon />Skills: {student.skills ? student.skills : " NA"}
                                             </Typography>
                                         </div>
                                     </div>

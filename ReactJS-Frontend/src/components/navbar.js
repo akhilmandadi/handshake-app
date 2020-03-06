@@ -8,8 +8,8 @@ class NavBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            studentNav: ["", "", "", "navVisited", ""],
-            companyNav: ["", "", "", "navVisited", ""]
+            studentNav: ["navVisited", "", "", "", ""],
+            companyNav: ["", "navVisited", "", "", ""]
         }
         this.handleLogout = this.handleLogout.bind(this);
         this.handleStudentNav = this.handleStudentNav.bind(this)

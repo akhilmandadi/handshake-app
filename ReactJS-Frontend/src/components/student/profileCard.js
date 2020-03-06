@@ -6,6 +6,11 @@ import _ from "lodash";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import EditIcon from '@material-ui/icons/Edit';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 class ProfileCard extends Component {
     constructor(props) {
@@ -14,18 +19,26 @@ class ProfileCard extends Component {
             name: "",
             student: {},
             education: [],
-            enableProfileSave: false
+            enableProfileSave: false,
+            img: "",
+            imageUploadModal: false,
+            file: null
         }
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
         this.enableProfileEdit = this.enableProfileEdit.bind(this)
         this.nameChangeHandler = this.nameChangeHandler.bind(this)
+        this.enableApplyModal = this.enableApplyModal.bind(this)
+        this.closeImageModal = this.closeImageModal.bind(this)
+        this.uploadProfilePicture = this.uploadProfilePicture.bind(this)
+        this.onChange = this.onChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             name: nextProps.student.name,
             student: nextProps.student,
-            education: nextProps.student.education
+            education: nextProps.student.education,
+            img: nextProps.student.image
         })
     }
 
@@ -66,6 +79,42 @@ class ProfileCard extends Component {
         })
     }
 
+    closeImageModal = () => {
+        this.setState({
+            imageUploadModal: false
+        })
+    }
+
+    enableApplyModal = () => {
+        this.setState({
+            imageUploadModal: !this.state.imageUploadModal
+        })
+    }
+
+    onChange(e) {
+        this.setState({ file: e.target.files[0] });
+    }
+
+    uploadProfilePicture = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('image', this.state.file);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        axios.post("http://localhost:8080/students/" + sessionStorage.getItem("id") + "/image", formData, config)
+            .then((response) => {
+                this.props.fetchStudentDetails();
+                this.setState({
+                    imageUploadModal: false,
+                    file:null
+                })
+            }).catch((error) => {
+            });
+    }
+
     render() {
         let profileInfo = null;
         let name = "";
@@ -79,9 +128,13 @@ class ProfileCard extends Component {
                 <CardContent style={{ textAlign: "-webkit-right", paddingTop: "10px" }} >
                     <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                     <div style={{ textAlign: "-webkit-center" }}>
-                        <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
-                            <h1>{name}</h1>
-                        </Avatar>
+                        {this.state.student.image === null ? (
+                            <Avatar className="changePhoto" title="Upload Profile Picture" onClick={this.enableApplyModal} variant="circle" style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                                <h1>{name}</h1>
+                            </Avatar>
+                        ) : (
+                                <Avatar className="changePhoto" title="Change Profile Picture" onClick={this.enableApplyModal} variant="circle" src={this.state.student.image} style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />
+                            )}
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
                         <h3>{this.state.name}</h3>
@@ -109,9 +162,13 @@ class ProfileCard extends Component {
                     <div class="row" style={{ width: "100%", marginLeft: "0px" }}>
                         <form onSubmit={this.profileSaveHandler}>
                             <div style={{ textAlign: "-webkit-center" }}>
-                                <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "grey" }}>
-                                    <h5>Change Photo</h5>
-                                </Avatar>
+                                {this.state.student.image === null ? (
+                                    <Avatar className="changePhoto" title="Upload Profile Picture" onClick={this.enableApplyModal} variant="circle" style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                                        <h1>{name}</h1>
+                                    </Avatar>
+                                ) : (
+                                        <Avatar className="changePhoto" title="Change Profile Picture" onClick={this.enableApplyModal} variant="circle" src={this.state.student.image} style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />
+                                    )}
                             </div>
                             <div class="col-md-12" style={{ marginBottom: "10px" }}>
                                 <label for="name">Name</label>
@@ -133,6 +190,25 @@ class ProfileCard extends Component {
         return (
             <div>
                 <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px", marginTop: "0px" }}>
+                    <Dialog style={{ minWidth: "400px" }} open={this.state.imageUploadModal} onClose={this.closeImageModal} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title"><h4>Edit Profile Picture</h4></DialogTitle>
+                        <form onSubmit={this.uploadProfilePicture}>
+                            <DialogContent>
+                                <h5>Attach your Photo</h5>
+                                <div class="form-group">
+                                    <input type="file" class="form-control-file" name="image"
+                                        id="exampleFormControlFile1" onChange={this.onChange} />
+                                </div>
+
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.closeImageModal} color="secondary">
+                                    Cancel
+                        </Button>
+                                <button type="submit" class="btn btn-success" onClick={this.uploadProfilePicture}>Save</button>
+                            </DialogActions>
+                        </form>
+                    </Dialog>
                     {profileInfo}
                 </Card>
             </div >

@@ -8,6 +8,7 @@ import SkillCard from './skillCard';
 import EducationCard from './educationCard';
 import ExperienceCard from './experienceCard';
 import PersonalInfoCard from './personalInfoCard';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class StudentProfile extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class StudentProfile extends Component {
             experience: {},
             objective: "",
             enableObjectiveSave: false,
+            img: ""
         }
         this.objectiveChangeHandler = this.objectiveChangeHandler.bind(this)
         this.objectiveClickHandler = this.objectiveClickHandler.bind(this)
@@ -27,6 +29,7 @@ class StudentProfile extends Component {
 
     componentDidMount() {
         this.fetchStudentDetails();
+        // this.fetchImageDetails();
     }
 
     fetchStudentDetails = () => {
@@ -35,6 +38,11 @@ class StudentProfile extends Component {
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
+                    var base64Flag = 'data:image/jpeg;base64,';
+                    if (response.data.image !== null) {
+                        var imageStr = this.arrayBufferToBase64(response.data.image.data);
+                        response.data.image = base64Flag + imageStr
+                    }
                     this.setState({
                         student: response.data,
                         education: response.data.education,
@@ -53,6 +61,13 @@ class StudentProfile extends Component {
                 })
             });
     }
+
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
 
     objectiveChangeHandler = (event) => {
         this.setState({
@@ -99,14 +114,27 @@ class StudentProfile extends Component {
                 </div>
             )
         } else objectiveSave = null
+        let loadingView = null;
+        if (_.isEmpty(this.state.student)) {
+            loadingView = (
+                <div style={{ zIndex: "1000" }}>
+                    <Card style={{ zIndex: "100000", width: "100%", height: "600px", textAlign: "-webkit-center" }}>
+                        <div style={{ marginTop: "200px", width: "200px" }}>
+                            <CircularProgress />
+                        </div>
+                    </Card>
+                </div>
+            )
+        }
         return (
             <div style={{ marginTop: "15px" }}>
+                {loadingView}
                 <div className="container" style={{ width: "75%", height: "100%" }}>
                     <div class="row" style={{ width: "100%" }}>
                         <div class="col-md-4">
                             <div class="row" >
                                 <div class="col-md-12">
-                                    <ProfileCard student={this.state.student} />
+                                    <ProfileCard student={this.state.student} fetchStudentDetails={this.fetchStudentDetails} />
                                 </div>
                             </div>
                             <div class="row" >

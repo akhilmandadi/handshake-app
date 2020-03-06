@@ -28,6 +28,12 @@ class StudentRegistrations extends Component {
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
+                    response.data.map(application => {
+                        if (application.image !== null) {
+                            var imageStr = this.arrayBufferToBase64(application.image.data);
+                            application.image = 'data:image/jpeg;base64,' + imageStr
+                        }
+                    })
                     this.setState({
                         applications: response.data
                     })
@@ -43,6 +49,13 @@ class StudentRegistrations extends Component {
                 })
             });
     }
+
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
     handleChangePage = (event, newPage) => {
         this.setState({
             page: newPage
@@ -70,8 +83,8 @@ class StudentRegistrations extends Component {
         return (
             <div>
                 <StudentNavBar tab="events" /><br />
-                <div className="container" style={{ width: "70%", align: "center",height: "100%" }}>
-                    <div style={{ }}>
+                <div className="container" style={{ width: "70%", align: "center", height: "100%" }}>
+                    <div style={{}}>
                         <div style={{ marginBottom: "20px", marginTop: "10px" }}><Typography color="textSecondary" variant="h6">
                             {(this.state.page * this.state.rowsPerPage) + 1} - {this.state.applications.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).length} of {this.state.applications.length} registrations
                                 </Typography></div>
@@ -80,9 +93,13 @@ class StudentRegistrations extends Component {
                                 <span style={{ alignContent: "right", padding: "0px" }} key={application.id}>
                                     <Card style={{ padding: "0px", marginBottom: "7px" }}>
                                         <div style={{ width: "15%", float: "left", height: "100%", alignItems: "center", overflow: "hidden" }}>
-                                            <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}>
-                                                <b style={{ fontSize: "80" }}>{application.company_name}</b>
-                                            </Avatar>
+                                            {application.image === null ? (
+                                                <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}>
+                                                    <b style={{ fontSize: "90" }}>{application.company_name}</b>
+                                                </Avatar>
+                                            ) : (
+                                                    <Avatar src={application.image} variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }} />
+                                                )}
                                         </div>
                                         <div style={{ width: "85%", height: "100%", overflowX: "float" }}>
                                             <CardContent style={{ paddingBottom: "5px" }}>

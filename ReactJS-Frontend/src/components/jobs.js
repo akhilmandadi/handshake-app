@@ -101,7 +101,7 @@ class Jobs extends Component {
         let errorBanner = null;
         if (this.state.jobs.length === 0) errorBanner = (<b>No Jobs Posted Currently</b>)
         return (
-            <div className="container" style={{ width: "85%", align: "center" ,marginTop:"20px"}}>
+            <div className="container" style={{ width: "85%", align: "center", marginTop: "20px" }}>
                 {createDialog}
                 {jobApplicants}
                 <div>
@@ -135,7 +135,7 @@ class Jobs extends Component {
                                                 if (column.id === "deadline" || column.id === "posting_date") value = moment(value).format("dddd, MMMM Do YYYY");
                                                 if (column.id === "applicants") {
                                                     return (
-                                                        <TableCell style={{ fontSize: "10px" }} onClick={()=>this.viewApplicants(row["id"])} id={row["id"]}>
+                                                        <TableCell style={{ fontSize: "10px" }} onClick={() => this.viewApplicants(row["id"])} id={row["id"]}>
                                                             <Tooltip title="View Applicants" arrow placement="right"><Button color="primary">{value}</Button></Tooltip>
                                                         </TableCell>
                                                     )

@@ -38,6 +38,11 @@ class ViewCompanyProfile extends Component {
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
+                    var base64Flag = 'data:image/jpeg;base64,';
+                    if (response.data.image !== null) {
+                        var imageStr = this.arrayBufferToBase64(response.data.image.data);
+                        response.data.image = base64Flag + imageStr
+                    }
                     this.setState({
                         company: response.data,
                         name: response.data.name,
@@ -60,6 +65,13 @@ class ViewCompanyProfile extends Component {
             });
     }
 
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
+
     render() {
         return (
             <div style={{ marginTop: "30px" }}>
@@ -69,9 +81,13 @@ class ViewCompanyProfile extends Component {
                             <Card>
                                 <CardContent style={{ textAlign: "-webkit-right" }} >
                                     <div style={{ textAlign: "-webkit-center" }}>
-                                        <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "orange" }}>
-                                            <h3>{this.state.company.name}</h3>
-                                        </Avatar>
+                                        {this.state.company.image === null ? (
+                                            <Avatar variant="circle" style={{ paddingRight: "0px", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                                                <h3>{this.state.company.name}</h3>
+                                            </Avatar>
+                                        ) : (
+                                                <Avatar variant="circle" src={this.state.company.image} style={{ paddingRight: "0px", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />
+                                            )}
                                     </div>
                                     <div style={{ textAlign: "-webkit-center" }}>
                                         <h3>{this.state.company.name}</h3>

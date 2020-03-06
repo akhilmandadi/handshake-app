@@ -72,6 +72,10 @@ class EventDetails extends Component {
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
+                    if (response.data.image !== null) {
+                        var imageStr = this.arrayBufferToBase64(response.data.image.data);
+                        response.data.image = 'data:image/jpeg;base64,' + imageStr
+                    }
                     this.setState({
                         event: response.data
                     })
@@ -90,6 +94,12 @@ class EventDetails extends Component {
             })
         this.fetchProfile()
     }
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
 
     render() {
         let eventDetails = null;
@@ -109,9 +119,13 @@ class EventDetails extends Component {
                         <Card style={{ padding: "30px", marginBottom: "0px", marginTop: "0px" }}>
                             <div className="row">
                                 <div className="col-md-1" style={{ alignItems: "center", verticalAlign: "center", marginTop: "0px" }}>
-                                    <Avatar variant="square" style={{ width: "80px", height: "80px" }}>
-                                        <b style={{ fontSize: "90" }}>{this.state.event.company_name}</b>
-                                    </Avatar>
+                                    {this.state.event.image === null ? (
+                                        <Avatar variant="square" style={{ width: "80px", height: "80px" }}>
+                                            <b style={{ fontSize: "90" }}>{this.state.event.company_name}</b>
+                                        </Avatar>
+                                    ) : (
+                                            <Avatar src={this.state.event.image} variant="square" style={{ width: "80px", height: "80px" }} />
+                                        )}
                                 </div>
                                 <div className="col-md-8" style={{ marginLeft: "35px" }}>
                                     <Typography variant="h4" style={{ marginBottom: "5px" }}>

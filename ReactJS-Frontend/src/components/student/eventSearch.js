@@ -24,6 +24,12 @@ class Events extends Component {
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
+                response.data.map(event => {
+                    if (event.image !== null) {
+                        var imageStr = this.arrayBufferToBase64(event.image.data);
+                        event.image = 'data:image/jpeg;base64,' + imageStr
+                    }
+                })
                 if (response.status === 200) {
                     this.setState({
                         events: response.data,
@@ -38,6 +44,13 @@ class Events extends Component {
                 })
             });
     }
+
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
 
     searchEvents = (event) => {
         this.setState({
@@ -88,9 +101,14 @@ class Events extends Component {
                             <Card style={{ padding: "10px", marginBottom: "5px", marginTop: "0px" }}>
                                 <div className="row">
                                     <div className="col-md-1" style={{ alignItems: "center", verticalAlign: "center", marginTop: "0px" }}>
-                                        <Avatar variant="square" style={{ width: "80px", height: "80px" }}>
-                                            <b style={{ fontSize: "90" }}>{event.company_name}</b>
-                                        </Avatar>
+                                        
+                                        {event.image === null ? (
+                                            <Avatar variant="square" style={{ width: "80px", height: "80px" }}>
+                                                <b style={{ fontSize: "90" }}>{event.company_name}</b>
+                                            </Avatar>
+                                        ) : (
+                                                <Avatar src={event.image} variant="square" style={{ width: "80px", height: "80px" }} />
+                                            )}
                                     </div>
                                     <div className="col-md-8" style={{ marginLeft: "15px" }}>
                                         <Typography variant="h5">
@@ -107,7 +125,7 @@ class Events extends Component {
                                         <Typography variant="subtitle">
                                             {moment(event.date).format("dddd, MMMM Do YYYY")} - {moment(event.time, "HH:mm:ss").format("LT")}
                                         </Typography><br />
-                                        <Typography variant="subtitle" style={{fontWeight:"600"}}>
+                                        <Typography variant="subtitle" style={{ fontWeight: "600" }}>
                                             <Link to={"event/" + event.id}>
                                                 View Details
                                             </Link>
@@ -120,7 +138,7 @@ class Events extends Component {
                                                 border: "1px solid green",
                                                 color: "green",
                                                 paddingTop: "2px",
-                                                paddingBottom:"2px"
+                                                paddingBottom: "2px"
                                             }}>
                                             View Event
                                             </button></Link>
