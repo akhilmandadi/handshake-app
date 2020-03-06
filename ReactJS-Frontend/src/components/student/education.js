@@ -243,7 +243,7 @@ class Education extends Component {
                                         <label htmlFor="contactEmail">End Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
                                             <select required value={this.state.month_of_passing} id="month_of_passing" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_passing">
-                                                <option selected value={"01"} id="01">January</option>
+                                                <option selected value={"1"} id="01">January</option>
                                                 <option value={"2"} id="2">February</option>
                                                 <option value={"3"} id="3">March</option>
                                                 <option value={"4"} id="4">April</option>

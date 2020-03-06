@@ -11,6 +11,11 @@ import Typography from '@material-ui/core/Typography'
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PhoneIcon from '@material-ui/icons/Phone';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 class CompanyProfile extends Component {
     constructor(props) {
@@ -25,7 +30,10 @@ class CompanyProfile extends Component {
             contact_email: "",
             enableDescriptionSave: false,
             enableContactSave: false,
-            enableProfileEdit: false
+            enableProfileEdit: false,
+            img: "",
+            imageUploadModal: false,
+            file: null
         }
         this.descriptionChangeHandler = this.descriptionChangeHandler.bind(this)
         this.descriptionClickHandler = this.descriptionClickHandler.bind(this)
@@ -40,6 +48,10 @@ class CompanyProfile extends Component {
         this.nameChangeHandler = this.nameChangeHandler.bind(this)
         this.locationChangeHandler = this.locationChangeHandler.bind(this)
         this.profileSaveHandler = this.profileSaveHandler.bind(this)
+        this.enableApplyModal = this.enableApplyModal.bind(this)
+        this.closeImageModal = this.closeImageModal.bind(this)
+        this.uploadProfilePicture = this.uploadProfilePicture.bind(this)
+        this.onChange = this.onChange.bind(this);
     }
 
     componentDidMount() {
@@ -52,6 +64,11 @@ class CompanyProfile extends Component {
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
+                    var base64Flag = 'data:image/jpeg;base64,';
+                    if (response.data.image !== null) {
+                        var imageStr = this.arrayBufferToBase64(response.data.image.data);
+                        response.data.image = base64Flag + imageStr
+                    }
                     this.setState({
                         company: response.data,
                         name: response.data.name,
@@ -59,7 +76,8 @@ class CompanyProfile extends Component {
                         description: response.data.description,
                         contact_num: response.data.contact_num,
                         contact_name: response.data.contact_name,
-                        contact_email: response.data.contact_email
+                        contact_email: response.data.contact_email,
+
                     })
                 } else {
                     this.setState({
@@ -73,6 +91,50 @@ class CompanyProfile extends Component {
                 })
             });
     }
+
+    uploadProfilePicture = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('image', this.state.file);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        axios.post("http://localhost:8080/company/" + sessionStorage.getItem("id") + "/image", formData, config)
+            .then((response) => {
+                this.fetchCompanyDetails();
+                this.setState({
+                    imageUploadModal: false,
+                    file: null
+                })
+            }).catch((error) => {
+            });
+    }
+
+
+    closeImageModal = () => {
+        this.setState({
+            imageUploadModal: false
+        })
+    }
+
+    enableApplyModal = () => {
+        this.setState({
+            imageUploadModal: !this.state.imageUploadModal
+        })
+    }
+
+    onChange(e) {
+        this.setState({ file: e.target.files[0] });
+    }
+
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b) => binary += String.fromCharCode(b));
+        return window.btoa(binary);
+    };
 
     descriptionChangeHandler = (event) => {
         this.setState({
@@ -266,9 +328,13 @@ class CompanyProfile extends Component {
                 <CardContent style={{ textAlign: "-webkit-right" }} >
                     <EditIcon className="editicon" color="primary" onClick={this.enableProfileEdit} style={{ textAlign: "-webkit-right", cursor: "pointer" }} />
                     <div style={{ textAlign: "-webkit-center" }}>
-                        <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "orange" }}>
-                            <h3>{this.state.company.name}</h3>
-                        </Avatar>
+                        {this.state.company.image === null ? (
+                            <Avatar className="changePhoto" title="Upload Profile Picture" onClick={this.enableApplyModal} variant="circle" style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                                <h3>{this.state.company.name}</h3>
+                            </Avatar>
+                        ) : (
+                                <Avatar className="changePhoto" title="Change Profile Picture" onClick={this.enableApplyModal} variant="circle" src={this.state.company.image} style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />
+                            )}
                     </div>
                     <div style={{ textAlign: "-webkit-center" }}>
                         <h3>{this.state.company.name}</h3>
@@ -287,9 +353,13 @@ class CompanyProfile extends Component {
                     <div class="row" style={{ width: "100%", marginLeft: "0px" }}>
                         <form onSubmit={this.profileSaveHandler}>
                             <div style={{ textAlign: "-webkit-center" }}>
-                                <Avatar variant="circle" style={{ width: "110px", height: "110px", margin: "15px", backgroundColor: "grey" }}>
-                                    <h5>Change Photo</h5>
-                                </Avatar>
+                                {this.state.company.image === null ? (
+                                    <Avatar className="changePhoto" title="Upload Profile Picture" onClick={this.enableApplyModal} variant="circle" style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
+                                        <h3>{this.state.company.name}</h3>
+                                    </Avatar>
+                                ) : (
+                                        <Avatar className="changePhoto" title="Change Profile Picture" onClick={this.enableApplyModal} variant="circle" src={this.state.company.image} style={{ cursor: "pointer", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />
+                                    )}
                             </div>
                             <div class="col-md-12" style={{ marginBottom: "10px" }}>
                                 <label for="name">Name</label>
@@ -309,6 +379,25 @@ class CompanyProfile extends Component {
         }
         return (
             <div style={{ marginTop: "30px" }}>
+                <Dialog style={{ minWidth: "400px" }} open={this.state.imageUploadModal} onClose={this.closeImageModal} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title"><h4>Edit Profile Picture</h4></DialogTitle>
+                    <form onSubmit={this.uploadProfilePicture}>
+                        <DialogContent>
+                            <h5>Attach your Photo</h5>
+                            <div class="form-group">
+                                <input type="file" class="form-control-file" name="image"
+                                    id="exampleFormControlFile1" onChange={this.onChange} />
+                            </div>
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeImageModal} color="secondary">
+                                Cancel
+                        </Button>
+                            <button type="submit" class="btn btn-success" onClick={this.uploadProfilePicture}>Save</button>
+                        </DialogActions>
+                    </form>
+                </Dialog>
                 <div className="container" style={{ width: "75%", height: "100%" }}>
                     <div class="row" style={{ width: "100%" }}>
                         <div class="col-md-4">

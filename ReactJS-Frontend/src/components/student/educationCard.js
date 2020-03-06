@@ -20,9 +20,9 @@ class EducationCard extends Component {
                 degree: "",
                 major: "",
                 year_of_starting: "",
-                month_of_starting: "01",
+                month_of_starting: "1",
                 year_of_passing: "",
-                month_of_passing: "10",
+                month_of_passing: "1",
                 cgpa: ""
             },
             new_college_name: ""
@@ -60,9 +60,9 @@ class EducationCard extends Component {
                             degree: "",
                             major: "",
                             year_of_starting: "",
-                            month_of_starting: "01",
+                            month_of_starting: "1",
                             year_of_passing: "",
-                            month_of_passing: "10",
+                            month_of_passing: "1",
                             cgpa: ""
                         }
                     })
@@ -133,16 +133,16 @@ class EducationCard extends Component {
                                     <div className="col-md-6" style={{ paddingRight: "0px", marginRight: "0px" }}>
                                         <label htmlFor="contactEmail">Start Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_starting">
-                                                <option selected value={"01"}>January</option>
-                                                <option value={"02"}>February</option>
-                                                <option value={"03"}>March</option>
-                                                <option value={"04"}>April</option>
-                                                <option value={"05"}>May</option>
-                                                <option value={"06"}>June</option>
-                                                <option value={"07"}>July</option>
-                                                <option value={"08"}>August</option>
-                                                <option value={"09"}>September</option>
+                                            <select value={this.state.newSchool.month_of_starting} required id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_starting">
+                                                <option selected value={"1"}>January</option>
+                                                <option value={"2"}>February</option>
+                                                <option value={"3"}>March</option>
+                                                <option value={"4"}>April</option>
+                                                <option value={"5"}>May</option>
+                                                <option value={"6"}>June</option>
+                                                <option value={"7"}>July</option>
+                                                <option value={"8"}>August</option>
+                                                <option value={"9"}>September</option>
                                                 <option value={"10"}>October</option>
                                                 <option value={"11"}>November</option>
                                                 <option value={"12"}>December</option>
@@ -153,16 +153,16 @@ class EducationCard extends Component {
                                     <div className="col-md-6" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
                                         <label htmlFor="contactEmail">End Date: </label>
                                         <div class="form-inline" style={{ marginBottom: "10px" }}>
-                                            <select required id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_passing">
-                                                <option selected value={"01"}>January</option>
-                                                <option value={"02"}>February</option>
-                                                <option value={"03"}>March</option>
-                                                <option value={"04"}>April</option>
-                                                <option value={"05"}>May</option>
-                                                <option value={"06"}>June</option>
-                                                <option value={"07"}>July</option>
-                                                <option value={"08"}>August</option>
-                                                <option value={"09"}>September</option>
+                                            <select value={this.state.newSchool.month_of_passing} required id="inputState" class="form-control" style={{ width: "55%", marginRight: "5px" }} onChange={this.handleChange} name="month_of_passing">
+                                                <option value={"1"}>January</option>
+                                                <option value={"2"}>February</option>
+                                                <option value={"3"}>March</option>
+                                                <option value={"4"}>April</option>
+                                                <option value={"5"}>May</option>
+                                                <option value={"6"}>June</option>
+                                                <option value={"7"}>July</option>
+                                                <option value={"8"}>August</option>
+                                                <option value={"9"}>September</option>
                                                 <option value={"10"}>October</option>
                                                 <option value={"11"}>November</option>
                                                 <option value={"12"}>December</option>

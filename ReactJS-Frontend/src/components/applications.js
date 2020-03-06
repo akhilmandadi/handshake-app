@@ -22,13 +22,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 const columns = [
     { id: 'student_name', label: 'Student Name', minWidth: 100 },
     { id: 'student_college', label: 'College', minWidth: 120 },
     { id: 'applied_on', label: 'Applied On', minWidth: 120 },
     { id: 'status', label: 'Status', minWidth: 100 },
-    { id: 'edit', label: '', minWidth: 100 }
+    { id: 'edit', label: '', minWidth: 100 },
+    { id: 'resume', label: '', minWidth: 100 }
 ];
 
 class Applications extends Component {
@@ -42,7 +45,10 @@ class Applications extends Component {
             jobInfo: {},
             isEditDialogOpen: false,
             currentApplicationId: "",
-            statusesToShow: []
+            statusesToShow: [],
+            showResume: false,
+            currentIndex: 0,
+            currentPdf: ""
         }
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -50,6 +56,7 @@ class Applications extends Component {
         this.toggleCreate = this.toggleCreate.bind(this);
         this.enableEdit = this.enableEdit.bind(this);
         this.handleEditDialogClose = this.handleEditDialogClose.bind(this);
+        this.enableResumeWindow = this.enableResumeWindow.bind(this)
     }
 
     componentDidMount() {
@@ -163,6 +170,21 @@ class Applications extends Component {
             isEditDialogOpen: false
         })
     }
+
+    closeResumeModal = () => {
+        this.setState({
+            showResume: false
+        })
+    }
+
+
+    enableResumeWindow = (index) => {
+        this.setState({
+            showResume: true,
+            currentIndex: index
+        })
+    }
+
     render() {
         let createDialog = null;
         let errorBanner = null;
@@ -182,6 +204,24 @@ class Applications extends Component {
                 </div>
             )
         }
+        let resumeModal = null;
+        if (this.state.applications.length > 0) {
+            resumeModal = (
+                <div>
+                    <Dialog style={{ minWidth: "400px" }} open={this.state.showResume} onClose={this.closeResumeModal} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title"><h4>Resume</h4></DialogTitle>
+                        <DialogContent>
+                            <object width="500" height="600" data={this.state.applications[this.state.currentIndex]["student_resume"]} type="application/pdf">   </object>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeResumeModal} color="secondary">
+                                Cancel
+                        </Button>
+                        </DialogActions>
+                    </Dialog></div>
+            )
+        }
+
         return (
             <div className="container" style={{ width: "85%", alignItems: "center", marginTop: "20px" }}>
                 <Dialog onClose={this.handleEditDialogClose} aria-labelledby="simple-dialog-title" open={this.state.isEditDialogOpen}>
@@ -210,6 +250,7 @@ class Applications extends Component {
                 </div>
                 {jobInfoTab}<br />
                 <Paper style={{ width: "100%", align: "center" }}>
+                    {resumeModal}
                     <TableContainer style={{ maxHeight: "80%" }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
@@ -226,7 +267,7 @@ class Applications extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.applications.map(row => {
+                                {this.state.applications.map((row, index) => {
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                             {columns.map(column => {
@@ -236,6 +277,13 @@ class Applications extends Component {
                                                     return (
                                                         <TableCell style={{ fontSize: "10px", textAlign: "center" }} onClick={() => this.enableEdit(row["application_id"], row["status"])} id={row["application_id"]}>
                                                             <Button color="secondary">{value}</Button>
+                                                        </TableCell>
+                                                    )
+                                                }
+                                                if (column.id === "resume") {
+                                                    return (
+                                                        <TableCell style={{ fontSize: "10px", textAlign: "center" }} onClick={() => this.enableResumeWindow(index)} id={row["application_id"]}>
+                                                            <Button color="primary">{value}</Button>
                                                         </TableCell>
                                                     )
                                                 }

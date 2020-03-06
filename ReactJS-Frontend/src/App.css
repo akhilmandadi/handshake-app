@@ -89,3 +89,66 @@
 .addSchool{
   color: green;
 }
+
+.unclickedFilter{
+  background-color: white !important;
+  border-radius: 15px !important;
+  border: 1px solid #1569e0 !important;
+  color: #1569e0 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 5px 11px !important;
+  margin: 0 8px 8px 0 !important;
+  box-shadow: none !important;
+}
+
+.clickedFilter{
+  background-color: #1569e0 !important;
+  border-radius: 15px !important;
+  border: 1px solid #1569e0 !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 5px 11px !important;
+  margin: 0 8px 8px 0 !important;
+  box-shadow: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.myCheckbox input {
+  position: relative;
+  z-index: -9999;
+}
+
+.myCheckbox span {
+  width: 20px;
+  height: 20px;
+  display: block;
+  background: black;
+}
+
+.myCheckbox input:checked + span {
+  background: violet;
+}
+
+.changePhoto:hover {
+  border: 1.5px solid;
+}
