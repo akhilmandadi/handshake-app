@@ -31,10 +31,8 @@ var storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         if (file.mimetype === "application/pdf") {
-            console.log("pdf ")
             cb(null, req.query.id + path.extname(file.originalname))
         } else {
-            console.log("image ")
             cb(null, req.params.id + path.extname(file.originalname))
         }
     }
@@ -236,12 +234,27 @@ app.get('/student/:studentId/applications', async (request, response) => {
     }
 });
 
+let filterJobs = async (jobs, applications) => {
+    for (const job of jobs) {
+        job.applied = ""
+        for(const app of applications){
+            if(job.id === app.job_id){
+                job.applied = "Applied"
+            }
+        }
+    }
+    return jobs
+}
+
 app.get('/jobs', async (request, response) => {
     try {
         var query = 'select j.id,j.title,j.posting_date,j.deadline, j.location,j.salary,j.description,j.category,j.company_id,c.name as company_name,c.image as image from jobs j,company c where c.id=j.company_id;'
-        var rows = await pool.query(query);
+        var jobs = JSON.stringify(await pool.query(query));
+        var applicationsQuery = 'select job_id from applications where student_id=?';
+        var applications = JSON.stringify(await pool.query(applicationsQuery, [request.query.studentId]));
+        let jobsData = await filterJobs(JSON.parse(jobs), JSON.parse(applications))
         //logger.debug("Response from DB:" + JSON.stringify(rows))
-        return response.json(rows).status(200);
+        return response.json(jobsData).status(200);
     } catch (ex) {
         logger.error(JSON.stringify(ex))
         let message = ex.message ? ex.message : 'Error while fetching jobs';
@@ -464,7 +477,7 @@ app.get('/student/profiles', async (request, response) => {
 
 app.get('/events', async (request, response) => {
     try {
-        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name from events e,company c where c.id=e.company_id;'
+        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name,c.image as image from events e,company c where c.id=e.company_id;'
         var rows = await pool.query(query);
         //logger.debug("Response from DB:" + JSON.stringify(rows))
         return response.json(rows).status(200);
@@ -478,7 +491,7 @@ app.get('/events', async (request, response) => {
 
 app.get('/event/:id', async (request, response) => {
     try {
-        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name from events e,company c where c.id=e.company_id and e.id=?'
+        var query = 'select e.id,e.name,e.date,e.time, e.location,e.eligibility,e.description,e.company_id,c.name as company_name,c.image as image from events e,company c where c.id=e.company_id and e.id=?'
         var rows = await pool.query(query, [request.params.id]);
         let status = ""
         if (!_.isEmpty(request.query)) {
@@ -608,7 +621,7 @@ app.post('/company/:companyId/job/:jobId/student/:studentId/apply', upload.singl
             const fileContent = fs.readFileSync('./public/resume/' + request.query.id + path.extname(request.file.originalname));
             //console.log(fileContent)
             const params = {
-                Bucket: 'handshakeresumes',
+                Bucket: 'handshakeimages',
                 Key: request.query.id + path.extname(request.file.originalname),
                 Body: fileContent,
                 ContentType: request.file.mimetype

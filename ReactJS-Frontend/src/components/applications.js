@@ -207,15 +207,15 @@ class Applications extends Component {
         let resumeModal = null;
         if (this.state.applications.length > 0) {
             resumeModal = (
-                <div>
-                    <Dialog style={{ minWidth: "400px" }} open={this.state.showResume} onClose={this.closeResumeModal} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title"><h4>Resume</h4></DialogTitle>
+                <div style={{ overflow: "none" }}>
+                    <Dialog style={{ minWidth: "100%" }} open={this.state.showResume} onClose={this.closeResumeModal} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title"><h4>{this.state.applications[this.state.currentIndex]["student_name"]}'s Resume</h4></DialogTitle>
                         <DialogContent>
-                            <object width="500" height="600" data={this.state.applications[this.state.currentIndex]["student_resume"]} type="application/pdf">   </object>
+                            <object width="550" height="600" data={this.state.applications[this.state.currentIndex]["student_resume"]} type="application/pdf">   </object>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={this.closeResumeModal} color="secondary">
-                                Cancel
+                                Close
                         </Button>
                         </DialogActions>
                     </Dialog></div>

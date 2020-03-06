@@ -70,12 +70,16 @@
 .jobTile:hover {
   background-color:rgb(240, 240, 240);
   border-left: 3px solid grey;
-  cursor: pointer;
+  cursor: pointer ;
+  text-decoration: underline !important;
+}
+.jobTile {
+  border-left: 3px solid white;
+  text-decoration: underline !important;
 }
 
-.jobTile {
-  cursor: pointer;
-  border-radius: 0px;
+.jobTileText:hover {
+  text-decoration: underline !important;
 }
 
 .trial {

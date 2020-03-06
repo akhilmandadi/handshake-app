@@ -202,7 +202,7 @@ class StudentProfile extends Component {
                                         <div style={{ textAlign: "-webkit-center" }}>
                                             {this.state.student.image === null ? (
                                                 <Avatar variant="circle" style={{ paddingRight: "0px", width: "110px", height: "110px", margin: "15px", backgroundColor: "brown" }}>
-                                                    <b style={{ fontSize: "80" }}>{name.substring(0, 1)}</b>
+                                                    <h1 style={{ fontSize: "80" }}>{name.substring(1, 2)}</h1>
                                                 </Avatar>
                                             ) : (
                                                     <Avatar variant="circle" src={this.state.student.image} style={{ paddingRight: "0px", width: "110px", height: "110px", margin: "15px", border: "0.5px solid" }} />

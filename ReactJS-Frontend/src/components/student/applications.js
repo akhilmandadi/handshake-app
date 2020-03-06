@@ -219,7 +219,7 @@ class StudentApplications extends Component {
                             </Card >
                         </div>
                         <div style={{ width: "75%" }}>
-                            <div style={{marginBottom:"20px", marginTop:"10px"}}><Typography color="textSecondary" variant="h6">
+                            <div style={{ marginBottom: "20px", marginTop: "10px" }}><Typography color="textSecondary" variant="h6">
                                 {(this.state.page * this.state.rowsPerPage) + 1} - {this.state.applications.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).length} of {this.state.applications.length} applications
                                 </Typography></div>
                             {this.state.applications.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(application => {
@@ -227,16 +227,13 @@ class StudentApplications extends Component {
                                     <span style={{ alignContent: "right", padding: "0px" }} key={application.id}>
                                         <Card style={{ padding: "0px", marginBottom: "7px" }}>
                                             <div style={{ width: "15%", float: "left", height: "100%", alignItems: "center", overflow: "hidden" }}>
-                                                <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}>
-                                                    <b style={{ fontSize: "80" }}>{application.name}</b>
-                                                </Avatar>
                                                 {application.image === null ? (
-                                                        <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}>
-                                                            <b style={{ fontSize: "90" }}>{application.name}</b>
-                                                        </Avatar>
-                                                    ) : (
-                                                            <Avatar src={application.image} variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}/>
-                                                        )}
+                                                    <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }}>
+                                                        <b style={{ fontSize: "90" }}>{application.name}</b>
+                                                    </Avatar>
+                                                ) : (
+                                                        <Avatar src={application.image} variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "orange" }} />
+                                                    )}
                                             </div>
                                             <div style={{ width: "85%", height: "100%", overflowX: "float" }}>
                                                 <CardContent style={{ paddingBottom: "5px" }}>

@@ -55,7 +55,7 @@ class Jobs extends Component {
     };
 
     getAllJobs = () => {
-        let url = 'http://localhost:8080/jobs';
+        let url = 'http://localhost:8080/jobs?studentId=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -241,8 +241,17 @@ class Jobs extends Component {
                     </div><br />
                     <div class="row" style={{ paddingLeft: "35px" }}>
                         <div class="col-md-7" style={{ border: "1px solid", padding: "10px", borderStyle: "groove", borderRadius: "0px" }}>
-                            <div class="col-md-10" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.deadline).format("MMMM Do, YYYY")}</div>
-                            <div class="col-md-2" ><button type="button" class="btn btn-success" onClick={this.enableApplyModal}>Apply</button></div>
+                            {this.state.currentJob.applied === "" ? (
+                                <div>
+                                    <div class="col-md-10" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.deadline).format("MMMM Do, YYYY")}</div>
+                                    <div class="col-md-2" ><button type="button" class="btn btn-success" onClick={this.enableApplyModal}>Apply</button></div>
+                                </div>
+                            ) : (
+                                    <div>
+                                        <div class="col-md-9" style={{ paddingTop: "5px" }}>Applications close on {moment(this.state.currentJob.deadline).format("MMMM Do, YYYY")}</div>
+                                        <div class="col-md-3" ><button type="button" disabled class="btn btn-danger">Applied Already</button></div>
+                                    </div>
+                                )}
                         </div>
                     </div><br />
                     <div class="row" style={{ paddingLeft: "20px", paddingRight: "40px" }}>
@@ -301,27 +310,30 @@ class Jobs extends Component {
                                 return (
                                     <div style={{ alignContent: "right", padding: "0px", borderRadius: "0px", border: "0px" }} onClick={() => this.renderJob(index)} key={job.id} id={job.id}>
                                         <Card className="jobTile" style={{ padding: "10px", marginBottom: "0px" }}>
-                                            <div style={{ width: "20%", float: "left", height: "100%", alignItems: "center", overflow: "hidden" }}>
-                                                {job.image === null ? (
+                                            <div className="row">
+                                                <div className="col-md-2" style={{  }}>
+                                                    {job.image === null ? (
                                                         <Avatar variant="square" style={{ width: "50px", height: "50px", margin: "10px", backgroundColor: "orange" }}>
                                                             <b style={{ fontSize: "90" }}>{job.company_name}</b>
                                                         </Avatar>
                                                     ) : (
-                                                            <Avatar src={job.image} variant="square" style={{ width: "50px", height: "50px", margin: "10px", backgroundColor: "orange" }}/>
+                                                            <Avatar src={job.image} variant="square" style={{ width: "50px", height: "50px", margin: "10px", backgroundColor: "orange" }} />
                                                         )}
+                                                </div>
+                                                <div className="col-md-6" style={{ marginLeft: "0px" }}>
+                                                    <CardContent className="jobTileText" style={{ paddingBottom: "5px",paddingLeft:"5px",paddingTop:"10px",marginTop:"0px" }}>
+                                                        <Typography gutterBottom variant="h5" style={{marginBottom:"2px"}}>
+                                                            <b>{job.title}</b>
+                                                        </Typography>
+                                                        <Typography variant="h6">
+                                                            {job.company_name} - {job.location}
+                                                        </Typography>
+                                                        <Typography variant="h6" style={{ verticalAlign: "center" }}>
+                                                            {job.category}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </div>
                                             </div>
-                                            <div style={{ width: "65%", height: "100%", overflowX: "float", marginLeft: "55px" }}>
-                                                <CardContent style={{ paddingBottom: "5px" }}>
-                                                    <Typography gutterBottom>
-                                                        <b>{job.title.toUpperCase()}</b>
-                                                    </Typography>
-                                                    <Typography >
-                                                        {job.company_name} - {job.location}
-                                                    </Typography>
-                                                    <Typography style={{ verticalAlign: "center" }}>
-                                                        {job.category}
-                                                    </Typography>
-                                                </CardContent></div>
                                         </Card>
                                     </div>
                                 );
