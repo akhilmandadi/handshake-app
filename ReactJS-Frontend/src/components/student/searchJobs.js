@@ -30,6 +30,7 @@ class Jobs extends Component {
             location: "",
             file: null,
             category: [],
+            currentIndex: 0,
             buttonColor: ["unclickedFilter", "unclickedFilter", "unclickedFilter", "unclickedFilter"]
         }
         this.renderJob = this.renderJob.bind(this)
@@ -41,7 +42,8 @@ class Jobs extends Component {
         this.changeButtonColor = this.changeButtonColor.bind(this)
         this.applyForJob = this.applyForJob.bind(this)
         this.onChange = this.onChange.bind(this);
-        this.getAllJobs = this.getAllJobs.bind(this)
+        this.getAllJobs = this.getAllJobs.bind(this);
+        this.changeJobStyle = this.changeJobStyle.bind(this)
     }
     componentDidMount() {
         this.getAllJobs();
@@ -54,6 +56,21 @@ class Jobs extends Component {
         return window.btoa(binary);
     };
 
+    changeJobStyle = (index) => {
+        let jobData = this.state.jobs
+        console.log(index)
+        console.log(this.state.currentIndex)
+        jobData.map(job => {
+            job["className"] = "jobTile"
+        })
+        //jobData[this.state.currentIndex]["className"] = "jobTile"
+        jobData[index]["className"] = "jobTileActive"
+        this.setState({
+            jobs: jobData,
+            currentIndex: index
+        })
+    }
+
     getAllJobs = () => {
         let url = 'http://localhost:8080/jobs?studentId=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
@@ -61,11 +78,13 @@ class Jobs extends Component {
             .then(response => {
                 if (response.status === 200) {
                     response.data.map(job => {
+                        job.className = "jobTile";
                         if (job.image !== null) {
                             var imageStr = this.arrayBufferToBase64(job.image.data);
                             job.image = 'data:image/jpeg;base64,' + imageStr
                         }
                     })
+                    response.data[0]["className"] = "jobTileActive"
                     this.setState({
                         jobs: response.data,
                         jobsFilter: response.data,
@@ -168,13 +187,16 @@ class Jobs extends Component {
     filterJobs = () => {
         let newJobs = []
         this.state.jobsFilter.map((job, index) => {
-            if (job.title.toLowerCase().includes(this.state.title.toLowerCase()) &&
+            job.className = "jobTile"
+            if (job.title.toLowerCase().includes(this.state.title.toLowerCase()) ||
+                job.company_name.toLowerCase().includes(this.state.title.toLowerCase()) &&
                 job.location.toLowerCase().includes(this.state.location.toLowerCase()) &&
                 this.filterCategory(job.category)
             ) {
                 newJobs.push(job)
             }
         })
+        if (newJobs.length > 0) newJobs[0]["className"] = "jobTileActive"
         this.setState({
             jobs: newJobs,
             currentJob: newJobs[0]
@@ -196,9 +218,9 @@ class Jobs extends Component {
         if (!_.isEmpty(this.state.currentJob)) {
             applyModal = (
                 <Dialog style={{ minWidth: "400px" }} open={this.state.isApplyDialogOpen} onClose={this.handleApplyClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title"><h4>Apply to {this.state.currentJob.company_name}</h4></DialogTitle>
+                    <DialogTitle style={{ paddingBottom: "5px" }} id="form-dialog-title"><h4>Apply to {this.state.currentJob.company_name}</h4></DialogTitle>
                     <form onSubmit={this.applyForJob}>
-                        <DialogContent>
+                        <DialogContent style={{ paddingTop: "0px" }}>
                             <h4>Details from {this.state.currentJob.company_name}:</h4>
                             Applying for {this.state.currentJob.title} Program requires a few documents. Attach them below
                             and get one step closer to your next job!
@@ -309,9 +331,9 @@ class Jobs extends Component {
                             {this.state.jobs.map((job, index) => {
                                 return (
                                     <div style={{ alignContent: "right", padding: "0px", borderRadius: "0px", border: "0px" }} onClick={() => this.renderJob(index)} key={job.id} id={job.id}>
-                                        <Card className="jobTile" style={{ padding: "10px", marginBottom: "0px" }}>
+                                        <Card className={job.className} style={{ padding: "10px", marginBottom: "0px" }} onClick={() => this.changeJobStyle(index)}>
                                             <div className="row">
-                                                <div className="col-md-2" style={{  }}>
+                                                <div className="col-md-2" style={{}}>
                                                     {job.image === null ? (
                                                         <Avatar variant="square" style={{ width: "50px", height: "50px", margin: "10px", backgroundColor: "orange" }}>
                                                             <b style={{ fontSize: "90" }}>{job.company_name}</b>
@@ -321,8 +343,8 @@ class Jobs extends Component {
                                                         )}
                                                 </div>
                                                 <div className="col-md-6" style={{ marginLeft: "0px" }}>
-                                                    <CardContent className="jobTileText" style={{ paddingBottom: "5px",paddingLeft:"5px",paddingTop:"10px",marginTop:"0px" }}>
-                                                        <Typography gutterBottom variant="h5" style={{marginBottom:"2px"}}>
+                                                    <CardContent className="jobTileText" style={{ paddingBottom: "5px", paddingLeft: "5px", paddingTop: "10px", marginTop: "0px" }}>
+                                                        <Typography gutterBottom variant="h5" style={{ marginBottom: "2px" }}>
                                                             <b>{job.title}</b>
                                                         </Typography>
                                                         <Typography variant="h6">

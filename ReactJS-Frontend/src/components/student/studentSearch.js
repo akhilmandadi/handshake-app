@@ -157,7 +157,6 @@ class StudentSearch extends Component {
         const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         return (
             <div><StudentNavBar tab="explore" /><br />
-                {loadingView}
                 <div className="container" style={{ width: "90%", height: "100%" }}>
                     <Grid container spacing={3}>
                         <div style={{ alignContent: "center", width: "20%", marginRight: "20px", paddingBottom: "10px" }}>

@@ -104,7 +104,7 @@ class Events extends Component {
                 {createDialog}
                 {jobApplicants}
                 <div>
-                    <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
+                    <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "rgb(225, 225, 225)" }} onClick={this.toggleCreate} >
                         <AddIcon /><b style={{ fontSize: "10px" }}>Create New Event</b>
                     </Fab>
                     <br /><br />

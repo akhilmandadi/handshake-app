@@ -8,6 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Redirect } from 'react-router';
+import bcrypt from 'bcryptjs'
 
 class SignUp extends Component {
     constructor(props) {
@@ -42,9 +43,12 @@ class SignUp extends Component {
     registerUser = (event) => {
         event.preventDefault();
         let url = 'http://localhost:8080/signup?persona=' + this.state.persona;
+        let encryptPassword = ""
+        const salt = bcrypt.genSaltSync(1);
+        encryptPassword = bcrypt.hashSync(this.state.password, salt);
         var data = {
             "email": this.state.email,
-            "password": this.state.password,
+            "password": encryptPassword,
             "name": this.state.name
         }
         if (this.state.persona === "company") data.location = this.state.location;
@@ -59,14 +63,14 @@ class SignUp extends Component {
                 } else {
                     this.setState({
                         signUpSuccessful: false,
-                        signupFailedError:true
+                        signupFailedError: true
                     })
                 }
             })
             .catch((error) => {
                 this.setState({
                     signUpSuccessful: false,
-                    signupFailedError:true
+                    signupFailedError: true
                 })
             });;
     }
@@ -128,13 +132,13 @@ class SignUp extends Component {
             this.setState({
                 repeatPassword: event.target.value,
                 passwordMatch: true,
-                passwordMatchError:false
+                passwordMatchError: false
             })
         } else {
             this.setState({
                 repeatPassword: event.target.value,
                 passwordMatch: false,
-                passwordMatchError:true
+                passwordMatchError: true
             })
         }
     }
@@ -155,7 +159,7 @@ class SignUp extends Component {
         return (
             <div >
                 {redirectToSignIn}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)",backgroundColor:"white", borderRadius:"5px" }}>
+                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)", backgroundColor: "white", borderRadius: "5px" }}>
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">
@@ -206,7 +210,7 @@ class SignUp extends Component {
                                     <Link to="/signin">Already a User? Sign In</Link>
                                 </div>
                             </form>
-                            <br/>
+                            <br />
                             <div>
                                 <Dialog
                                     open={this.state.signUpSuccessful}
