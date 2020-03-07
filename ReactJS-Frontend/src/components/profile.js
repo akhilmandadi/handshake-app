@@ -174,7 +174,7 @@ class CompanyProfile extends Component {
 
     enableContactEdit = (event) => {
         this.setState({
-            enableContactSave: true
+            enableContactSave: !this.state.enableContactSave
         })
     }
 
@@ -224,7 +224,7 @@ class CompanyProfile extends Component {
 
     enableProfileEdit = () => {
         this.setState({
-            enableProfileEdit: true
+            enableProfileEdit: !this.state.enableProfileEdit
         })
     }
 
@@ -290,6 +290,7 @@ class CompanyProfile extends Component {
                         <input onChange={this.contactNameChangeHandler} value={this.state.contact_name} type="text" readonly class="form-control" id="contactName" aria-describedby="contactName" placeholder="Enter Contact Name"></input>
                     </div>
                     <div class="col-md-12" style={{ textAlign: "-webkit-right", paddingRight: "15px" }}>
+                        <button type="button" onClick={this.enableContactEdit} style={{ backgroundColor: "rgba(0,0,0,.06)", color: "black", marginRight: "5px" }} class="btn btn-secondary" >Cancel</button>
                         <button type="button" style={{ backgroundColor: "#0d7f02" }} class="btn btn-success" onClick={this.contactSaveHandler}>Save</button>
                     </div>
                 </div>
@@ -370,6 +371,7 @@ class CompanyProfile extends Component {
                                 <input required onChange={this.locationChangeHandler} value={this.state.location} type="text" readonly class="form-control" id="location" aria-describedby="location" placeholder=""></input>
                             </div>
                             <div class="col-md-12" style={{ textAlign: "-webkit-right", marginTop: "10px" }}>
+                                <button type="button" onClick={this.enableProfileEdit} style={{ backgroundColor: "rgba(0,0,0,.06)", color: "black", marginRight: "5px" }} class="btn btn-secondary" >Cancel</button>
                                 <button type="submit" style={{ backgroundColor: "#0d7f02" }} class="btn btn-success" >Save</button>
                             </div>
                         </form>

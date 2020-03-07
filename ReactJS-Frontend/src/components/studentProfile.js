@@ -288,10 +288,10 @@ class StudentProfile extends Component {
                         <div class="col-md-8">
                             <Card style={{ marginBottom: "15px", paddingBottom: "15px", paddingTop: "15px" }}>
                                 <h4 style={{ marginBottom: "25px", paddingBottom: "0px", marginLeft: "15px" }}>Objective</h4>
-                                <div class="row" style={{ width: "100%", marginLeft: "15px", marginBottom: "0px" }}>
-                                    <div class="col-md-12" style={{ textAlign: "-webkit-center" }}><h5 style={{ marginTop: "0px" }}>
+                                <div class="row" style={{ width: "100%", marginLeft: "0px", marginBottom: "0px" }}>
+                                    <div class="col-md-12" style={{}}><h6 style={{ marginTop: "0px" }}>
                                         {this.state.student.career_objective === null ? "Not Updated" : this.state.student.career_objective}
-                                    </h5>
+                                    </h6>
                                     </div>
                                 </div>
                             </Card>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import bcrypt from 'bcryptjs'
 
 class SignIn extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class SignIn extends Component {
 
     authenticateUser = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/signin?persona=' + this.state.persona + '&email=' + this.state.email + '&password=' + this.state.password;
+        let url = 'http://localhost:8080/signin?persona=' + this.state.persona + '&email=' + this.state.email;
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -37,9 +38,15 @@ class SignIn extends Component {
                     sessionStorage.setItem("email", this.state.email);
                     sessionStorage.setItem("id", response.data.id);
                     sessionStorage.setItem("name", response.data.name);
-                    this.setState({
-                        invalidCredentials: false
-                    })
+                    if (bcrypt.compareSync(this.state.password, response.data.password)) {
+                        this.setState({
+                            invalidCredentials: false
+                        })
+                    } else {
+                        this.setState({
+                            invalidCredentials: true
+                        })
+                    }
                 } else {
                     this.setState({
                         invalidCredentials: true
@@ -82,10 +89,10 @@ class SignIn extends Component {
         let home = null;
         //if (this.state.invalidCredentials === false) {
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
-            home = <Redirect to="/company/profile" />
+            home = <Redirect to="/company/jobs" />
         }
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "student") {
-            home = <Redirect to={"/explore/students"} />
+            home = <Redirect to={"/jobs"} />
         }
         return (
             <div style={{ marginTop: "20px" }}>

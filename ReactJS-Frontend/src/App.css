@@ -69,12 +69,19 @@
 
 .jobTile:hover {
   background-color:rgb(240, 240, 240);
-  border-left: 3px solid grey;
+  border-left: 4px solid grey;
   cursor: pointer ;
   text-decoration: underline !important;
 }
 .jobTile {
-  border-left: 3px solid white;
+  border-left: 4px solid white;
+  text-decoration: underline !important;
+}
+
+.jobTileActive {
+  border-left: 4px solid #1569e0;
+  background-color:#f0f3fa !important;
+  cursor: pointer ;
   text-decoration: underline !important;
 }
 
@@ -119,7 +126,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 5px;
 }
 
 /* Track */
@@ -129,28 +136,12 @@
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: rgb(167, 167, 167); 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
-}
-
-.myCheckbox input {
-  position: relative;
-  z-index: -9999;
-}
-
-.myCheckbox span {
-  width: 20px;
-  height: 20px;
-  display: block;
-  background: black;
-}
-
-.myCheckbox input:checked + span {
-  background: violet;
 }
 
 .changePhoto:hover {
