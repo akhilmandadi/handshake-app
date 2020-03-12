@@ -13,6 +13,7 @@ import Fab from "@material-ui/core/Fab";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
 
 const columns = [
     { id: 'student_name', label: 'Student Name', minWidth: 100 },
@@ -37,7 +38,7 @@ class Registrations extends Component {
         this.fetchRegistrations();
         const { match: { params } } = this.props;
         axios.defaults.withCredentials = true;
-        axios.get('http://localhost:8080/event/' + params.eventId)
+        axios.get(process.env.REACT_APP_BACKEND_URL + 'event/' + params.eventId)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -70,7 +71,7 @@ class Registrations extends Component {
 
     fetchRegistrations = () => {
         const { match: { params } } = this.props;
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/event/' + params.eventId + '/applicants';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/event/' + params.eventId + '/applicants';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -97,21 +98,21 @@ class Registrations extends Component {
         let jobInfoTab = null;
         if (this.state.jobInfo !== {}) {
             jobInfoTab = (
-                <div style={{ borderRadius: "2.5px", padding: "30px", backgroundColor: "white" }}>
+                <Card style={{ borderRadius: "2.5px", padding: "30px", backgroundColor: "white" }}>
                     <Grid container spacing={3}>
                         <div className="container" style={{ width: "25%" }}><b>Name:</b> {this.state.jobInfo.name}</div>
                         <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-time"> </span></b> {moment(this.state.jobInfo.date).format("MMMM Do YYYY")} {moment(this.state.jobInfo.time, "HH:mm:ss").format("LT")}</div>
                         <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-map-marker"></span></b> {this.state.jobInfo.location}</div>
                         <div className="container" style={{ width: "25%" }}><b>Eligibility:</b> {this.state.jobInfo.eligibility}</div>
                     </Grid>
-                </div>
+                </Card>
             )
         }
         return (
             <div className="container" style={{ width: "85%", alignItems: "center", marginTop: "20px" }}>
                 <div>
-                    <Link to="/company/events">
-                        <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
+                    <Link to="/company/events" style={{textDecoration:"none"}}>
+                        <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "rgb(225, 225, 225)" }} onClick={this.toggleCreate} >
                             <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}> Back to All Events</b>
                         </Fab>
                     </Link>

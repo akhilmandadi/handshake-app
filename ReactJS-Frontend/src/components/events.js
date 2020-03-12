@@ -1,30 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import CreateEvent from "./createEvent"
 import { Redirect } from 'react-router';
 import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-
-const columns = [
-    { id: 'name', label: 'Name', minWidth: 70 },
-    { id: 'date', label: 'Date', minWidth: 100 },
-    { id: 'time', label: 'Time', minWidth: 100 },
-    { id: 'location', label: 'Location', minWidth: 100 },
-    { id: 'description', label: 'Description', minWidth: 100 },
-    { id: 'eligibility', label: 'Eligibility', minWidth: 100 },
-    { id: 'applicants', label: '', minWidth: 100 }
-];
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import EventIcon from '@material-ui/icons/Event';
 
 class Events extends Component {
     constructor(props) {
@@ -45,7 +31,7 @@ class Events extends Component {
         this.updateJobs();
     }
     updateJobs = () => {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/events';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/events';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -100,7 +86,7 @@ class Events extends Component {
         let errorBanner = null;
         if (this.state.jobs.length === 0) errorBanner = (<b>No Events Posted Currently</b>)
         return (
-            <div className="container" style={{ width: "85%", align: "center", marginTop: "20px" }}>
+            <div className="container" style={{ width: "80%", align: "center", marginTop: "20px" }}>
                 {createDialog}
                 {jobApplicants}
                 <div>
@@ -109,61 +95,44 @@ class Events extends Component {
                     </Fab>
                     <br /><br />
                 </div>
-                <Paper style={{ width: "100%", align: "center" }}>
-                    <TableContainer style={{ maxHeight: "80%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map(column => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{ minWidth: column.minWidth, backgroundColor: "rgb(225, 225, 225)", fontWeight: "bold", fontSize: "13px" }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.jobs.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(row => {
-                                    return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                            {columns.map(column => {
-                                                let value = row[column.id];
-                                                if (column.id === "date") value = moment(value).format("dddd, MMMM Do YYYY");
-                                                if (column.id === "time") value = moment(value, "HH:mm:ss").format("LT");
-                                                if (column.id === "applicants") {
-                                                    return (
-                                                        <TableCell style={{ fontSize: "10px" }} onClick={() => this.viewApplicants(row["id"])} id={row["id"]}>
-                                                            <Tooltip title="View Applicants" arrow placement="right"><Button color="primary">{value}</Button></Tooltip>
-                                                        </TableCell>
-                                                    )
-                                                }
-                                                return (
-                                                    <TableCell key={column.id} align={column.align} style={{ fontSize: "10px" }}>
-                                                        {value}
-                                                    </TableCell>
-                                                );
-
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 20]}
-                        component="div"
-                        count={this.state.jobs.length}
-                        rowsPerPage={this.state.rowsPerPage}
-                        page={this.state.page}
-                        onChangePage={this.handleChangePage}
-                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    />
-                </Paper>
+                <div>
+                    {this.state.jobs.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map(job => {
+                        return (
+                            <Card style={{ padding: "15px",marginBottom:"4px" }}>
+                                <div className="row">
+                                    <div className="col-md-1">
+                                        <Avatar variant="square" style={{ width: "80px", height: "80px", margin: "10px", backgroundColor: "#5ba1c7" }} >
+                                            <h6><EventIcon style={{ fontSize: 50, color: "#385b6e" }} /></h6>
+                                        </Avatar>
+                                    </div>
+                                    <div className="col-md-9" style={{ paddingLeft: "55px" }}>
+                                        <div className="row inline"><h4 style={{ marginBottom: "6px", paddingBottom: "0px" }}>{job.name}</h4></div>
+                                        <div className="row"><h5 style={{ marginTop: "0px", marginBottom: "4px" }}><span class="glyphicon glyphicon-map-marker"></span> {job.location}</h5></div>
+                                        <div class="row" style={{ paddingLeft: "0px" }}>
+                                            <Typography color="" variant="h6" style={{ display: "inline" }}><span class="glyphicon glyphicon-time"></span> {moment(job.date).format("dddd, MMMM Do")}, {moment(job.time, "HH:mm:ss").format("LT")}</Typography>
+                                        </div>
+                                        <div className="row ">
+                                            <Typography color="" variant="h6" style={{ display: "inline" }}>Eligibility: {job.eligibility}</Typography>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2" style={{ backgroundColor: "" }}>
+                                        <Button color="primary" variant="outlined" onClick={() => this.viewApplicants(job["id"])}>{job.applicants}</Button>
+                                    </div>
+                                </div>
+                            </Card>
+                        );
+                    })}
+                </div>
                 <div style={{ textAlign: "center" }}><br />{errorBanner}</div>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={this.state.jobs.length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
             </div>
         )
     }

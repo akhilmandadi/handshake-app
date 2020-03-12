@@ -46,7 +46,7 @@ class EducationCard extends Component {
 
     addNewSchool = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.post(url, {
             education: this.state.newSchool

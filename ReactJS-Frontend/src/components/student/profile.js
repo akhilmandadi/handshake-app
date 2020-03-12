@@ -33,7 +33,7 @@ class StudentProfile extends Component {
     }
 
     fetchStudentDetails = () => {
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -82,7 +82,7 @@ class StudentProfile extends Component {
     }
 
     objectiveSaveHandler = (event) => {
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             objective: this.state.objective

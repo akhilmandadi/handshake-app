@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import bcrypt from 'bcryptjs'
+import logo from './handshakeLogin.PNG';
 
 class SignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
             invalidCredentials: '',
-            persona: "company",
+            persona: "student",
             email: "",
             password: "",
             invalidEmail: false
@@ -29,16 +30,16 @@ class SignIn extends Component {
 
     authenticateUser = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/signin?persona=' + this.state.persona + '&email=' + this.state.email;
+        let url = process.env.REACT_APP_BACKEND_URL + 'signin?persona=' + this.state.persona + '&email=' + this.state.email;
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
                 if (response.status === 200) {
-                    sessionStorage.setItem("persona", this.state.persona);
-                    sessionStorage.setItem("email", this.state.email);
-                    sessionStorage.setItem("id", response.data.id);
-                    sessionStorage.setItem("name", response.data.name);
                     if (bcrypt.compareSync(this.state.password, response.data.password)) {
+                        sessionStorage.setItem("persona", this.state.persona);
+                        sessionStorage.setItem("email", this.state.email);
+                        sessionStorage.setItem("id", response.data.id);
+                        sessionStorage.setItem("name", response.data.name);
                         this.setState({
                             invalidCredentials: false
                         })
@@ -87,7 +88,7 @@ class SignIn extends Component {
 
     render() {
         let home = null;
-        //if (this.state.invalidCredentials === false) {
+        console.log(new Date().toISOString().slice(0, 10))
         if (sessionStorage.getItem("email") !== null && sessionStorage.getItem("persona") === "company") {
             home = <Redirect to="/company/jobs" />
         }
@@ -95,45 +96,56 @@ class SignIn extends Component {
             home = <Redirect to={"/jobs"} />
         }
         return (
-            <div style={{ marginTop: "20px" }}>
+            <div >
                 {home}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)", backgroundColor: "white", borderRadius: "5px" }}>
-                    <div class="login-form">
-                        <div class="main-div">
-                            <div class="panel">
-                                <h2 style={{ textAlign: "center" }}>Sign In</h2>
-                            </div>
-                            <div>
-                                <div class="radio-inline">
-                                    <input type="radio" style={{ color: "black" }} value="student" name="persona" onChange={this.changePersona} /><p>I'm a Student</p>
-                                </div>
-                                <div class="radio-inline">
-                                    <input type="radio" value="company" name="persona" onChange={this.changePersona} defaultChecked /><p>I'm a Company</p>
-                                </div>
-                            </div>
-                            <form className="form" onSubmit={this.authenticateUser}>
-                                <div class="form-group">
-                                    <input type="email" onChange={this.emailChangeHandler} style={{ backgroundColor: "" }} class="form-control" name="emailId" placeholder="Email Id" required />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.invalidEmail ? <span style={{ color: "red", "font-weight": "bold", "textAlign": "center" }}>Invalid Email Id. Please check</span> : ''}
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" onChange={this.passwordChangeHandler} class="form-control" name="password" placeholder="Password" required />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.invalidCredentials ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>Invalid Username or Password</span> : ''}
-                                </div>
-                                <div style={{ textAlign: "center" }}>
-                                    <button disabled={this.validateCredentials()} class="btn btn-success" style={{ "width": "100%" }}>Login</button>
-                                </div>
-                                <br />
-                                <div style={{ textAlign: "center" }}>
-                                    <Link to="/signup">Not a User? Sign Up</Link>
-                                </div>
-                            </form>
-                            <br />
+                <div class="container" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
+                    <div className="row" >
+                        <div className="col-md-5" style={{ width: "450px", backgroundColor: "1569e0", backgroundColor: "white", height: "520px" }}>
+                            <img src={logo} style={{ width: "450px", height: "520px" }} />
                         </div>
+                        <div className="col-md-7" style={{
+                            backgroundColor: "white", width: "400px",
+                            border: "0px solid rgb(9, 3, 12)", borderRadius: "5px", padding: "50px", paddingTop: "20px", marginLeft: "220px", marginTop: "50px"
+                        }}>
+                            <div class="login-form row">
+                                <div class="main-div">
+                                    <div class="panel">
+                                        <h2 style={{ textAlign: "center" }}>Sign In</h2>
+                                    </div>
+                                    <div className="row" style={{ marginLeft: "35px", marginBottom: "10px", marginTop: "30px" }}>
+                                        <div class="col-md-5 radio-inline">
+                                            <input type="radio" value="student" name="persona" onChange={this.changePersona} defaultChecked /><p>I'm a Student</p>
+                                        </div>
+                                        <div class="col-md-5 radio-inline">
+                                            <input type="radio" value="company" name="persona" onChange={this.changePersona} /><p>I'm a Company</p>
+                                        </div>
+                                    </div>
+                                    <form className="form" onSubmit={this.authenticateUser}>
+                                        <div class="form-group">
+                                            <input type="email" onChange={this.emailChangeHandler} style={{ backgroundColor: "" }} class="form-control" name="emailId" placeholder="Email Id" required />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.invalidEmail ? <span style={{ color: "red", "font-weight": "bold", "textAlign": "center" }}>Invalid Email Id. Please check</span> : ''}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" onChange={this.passwordChangeHandler} class="form-control" name="password" placeholder="Password" required />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.invalidCredentials ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>Invalid Username or Password</span> : ''}
+                                        </div>
+                                        <div style={{ textAlign: "center" }}>
+                                            <button disabled={this.validateCredentials()} class="btn btn-success" style={{ "width": "100%" }}>Login</button>
+                                        </div>
+                                        <br />
+                                        <div style={{ textAlign: "center" }}>
+                                            <Link to="/signup">Not a User? Sign Up</Link>
+                                        </div>
+                                    </form>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -59,7 +59,7 @@ class CompanyProfile extends Component {
     }
 
     fetchCompanyDetails = () => {
-        let url = 'http://localhost:8080/company?id=' + sessionStorage.getItem("id");
+        let url = process.env.REACT_APP_BACKEND_URL + 'company?id=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -101,7 +101,7 @@ class CompanyProfile extends Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:8080/company/" + sessionStorage.getItem("id") + "/image", formData, config)
+        axios.post(process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + "/image", formData, config)
             .then((response) => {
                 this.fetchCompanyDetails();
                 this.setState({
@@ -149,7 +149,7 @@ class CompanyProfile extends Component {
     }
 
     descriptionSaveHandler = (event) => {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             description: this.state.description
@@ -197,7 +197,7 @@ class CompanyProfile extends Component {
     }
 
     contactSaveHandler = (event) => {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             contact_name: this.state.contact_name,
@@ -206,6 +206,7 @@ class CompanyProfile extends Component {
         })
             .then(response => {
                 if (response.status === 200) {
+                    this.fetchCompanyDetails();
                     this.setState({
                         enableContactSave: false
                     })
@@ -240,8 +241,9 @@ class CompanyProfile extends Component {
         })
     }
 
-    profileSaveHandler = () => {
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/profile';
+    profileSaveHandler = (e) => {
+        e.preventDefault();
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             name: this.state.name,
@@ -249,6 +251,7 @@ class CompanyProfile extends Component {
         })
             .then(response => {
                 if (response.status === 200) {
+                    this.fetchCompanyDetails();
                     this.setState({
                         enableProfileEdit: false
                     })

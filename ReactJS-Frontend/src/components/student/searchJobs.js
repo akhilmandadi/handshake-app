@@ -58,12 +58,9 @@ class Jobs extends Component {
 
     changeJobStyle = (index) => {
         let jobData = this.state.jobs
-        console.log(index)
-        console.log(this.state.currentIndex)
         jobData.map(job => {
             job["className"] = "jobTile"
         })
-        //jobData[this.state.currentIndex]["className"] = "jobTile"
         jobData[index]["className"] = "jobTileActive"
         this.setState({
             jobs: jobData,
@@ -72,7 +69,7 @@ class Jobs extends Component {
     }
 
     getAllJobs = () => {
-        let url = 'http://localhost:8080/jobs?studentId=' + sessionStorage.getItem("id");
+        let url = process.env.REACT_APP_BACKEND_URL + 'jobs?studentId=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -89,7 +86,7 @@ class Jobs extends Component {
                         jobs: response.data,
                         jobsFilter: response.data,
                         currentJob: response.data[0]
-                    })
+                    },()=>this.filterJobs())
                 } else {
                     this.setState({
                         jobs: [],
@@ -135,13 +132,16 @@ class Jobs extends Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        let url = 'http://localhost:8080/company/' + this.state.currentJob.company_id +
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + this.state.currentJob.company_id +
             '/job/' + this.state.currentJob.id + '/student/' + sessionStorage.getItem("id") + '/apply?id=' + uuid.generate()
         axios.post(url, formData, config)
             .then((response) => {
                 this.getAllJobs()
+                let curJob = this.state.currentJob;
+                curJob.applied="Applied"
                 this.setState({
-                    isApplyDialogOpen: false
+                    isApplyDialogOpen: false,
+                    currentJob: curJob
                 })
             }).catch((error) => {
                 this.setState({
@@ -188,8 +188,8 @@ class Jobs extends Component {
         let newJobs = []
         this.state.jobsFilter.map((job, index) => {
             job.className = "jobTile"
-            if (job.title.toLowerCase().includes(this.state.title.toLowerCase()) ||
-                job.company_name.toLowerCase().includes(this.state.title.toLowerCase()) &&
+            if ((job.title.toLowerCase().includes(this.state.title.toLowerCase()) ||
+                job.company_name.toLowerCase().includes(this.state.title.toLowerCase())) &&
                 job.location.toLowerCase().includes(this.state.location.toLowerCase()) &&
                 this.filterCategory(job.category)
             ) {
@@ -362,7 +362,7 @@ class Jobs extends Component {
                             })}
                             <div style={{ textAlign: "center" }}><br />{errorBanner}</div>
                         </div>
-                        <div style={{ alignContent: "center", height: "330px", width: "59%", marginRight: "20px", overflowX: "none", overflowY: "none" }}>
+                        <div style={{ alignContent: "center", height: "330px", width: "61%", marginRight: "20px", overflowX: "none", overflowY: "none" }}>
                             <Card style={{ height: "100%", overflowY: "scroll" }}>
                                 {currentJob}
                             </Card >

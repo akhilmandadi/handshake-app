@@ -42,7 +42,7 @@ class StudentApplications extends Component {
         this.mergeFilters = this.mergeFilters.bind(this)
     }
     componentDidMount() {
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + "/applications";
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + "/applications";
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
