@@ -64,7 +64,7 @@ class Education extends Component {
 
     saveSchoolChanges = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             college_name: this.state.college_name,
@@ -94,7 +94,7 @@ class Education extends Component {
 
     deleteSchool = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile?entity=education&id=' + this.state.id;
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile?entity=education&id=' + this.state.id;
         axios.defaults.withCredentials = true;
         axios.delete(url)
             .then(response => {

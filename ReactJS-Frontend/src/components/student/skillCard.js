@@ -30,7 +30,8 @@ class SkillCard extends Component {
 
     skillSaveHandler = (event) => {
         let skillString = this.state.skills.toString() + "," + this.state.newSkill;
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        if (this.state.skills.length === 0) skillString = this.state.newSkill
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             skills: skillString
@@ -50,7 +51,7 @@ class SkillCard extends Component {
 
     skillDelete = (event) => {
         let skillString = this.state.skills.toString();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             skills: skillString
@@ -107,11 +108,11 @@ class SkillCard extends Component {
         }
         return (
             <div style={{}}>
-                <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px",paddingLeft:"5px",paddingRight:"5px" }}>
+                <Card style={{ marginBottom: "15px", paddingBottom: "0px", paddingTop: "0px", paddingLeft: "5px", paddingRight: "5px" }}>
                     <CardContent style={{}} >
                         <div className="row" style={{ marginLeft: "0px", marginRight: "0px" }}>
                             <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "0px" }}>
-                                <h4 style={{ marginBottom: "15px", paddingBottom: "0px", marginLeft: "0px",marginTop:"0px" }}>Skills</h4>
+                                <h4 style={{ marginBottom: "15px", paddingBottom: "0px", marginLeft: "0px", marginTop: "0px" }}>Skills</h4>
                             </div>
                             <div className="row" style={{ marginLeft: "0px", marginRight: "0px", marginBottom: "10px" }}>
                                 {skillsChips}

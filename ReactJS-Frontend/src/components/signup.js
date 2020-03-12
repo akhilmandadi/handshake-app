@@ -9,6 +9,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Redirect } from 'react-router';
 import bcrypt from 'bcryptjs'
+import logo from './handshakeLogin.PNG';
 
 class SignUp extends Component {
     constructor(props) {
@@ -42,7 +43,7 @@ class SignUp extends Component {
 
     registerUser = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/signup?persona=' + this.state.persona;
+        let url = process.env.REACT_APP_BACKEND_URL + 'signup?persona=' + this.state.persona;
         let encryptPassword = ""
         const salt = bcrypt.genSaltSync(1);
         encryptPassword = bcrypt.hashSync(this.state.password, salt);
@@ -159,82 +160,93 @@ class SignUp extends Component {
         return (
             <div >
                 {redirectToSignIn}
-                <div class="container" style={{ width: "30%", border: "0px solid rgb(9, 3, 12)", backgroundColor: "white", borderRadius: "5px" }}>
-                    <div class="login-form">
-                        <div class="main-div">
-                            <div class="panel">
-                                <h2 style={{ textAlign: "center" }}>Sign Up</h2>
-                            </div>
-                            <div>
-                                <div class="radio-inline">
-                                    <input type="radio" value="student" name="persona" defaultChecked onChange={this.changePersona} /><p>I'm a Student</p>
-                                </div>
-                                <div class="radio-inline">
-                                    <input type="radio" value="company" name="persona" onChange={this.changePersona} /><p>I'm a Company</p>
-                                </div>
-                            </div>
-                            <form onSubmit={this.registerUser}>
-                                <div class="form-group">
-                                    <input type="text" onChange={this.nameChangeHandler} class="form-control" name="name" placeholder={this.state.placeholder ? "Name" : "Company Name"} required />
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" onChange={this.emailChangeHandler} class="form-control" name="email" placeholder="Email Id" required />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.invalidEmail ? <span style={{ color: "red", "textAlign": "center" }}>Invalid Email Id. Please check</span> : ''}
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" onChange={this.passwordChangeHandler} class="form-control" name="password" placeholder="Password" required />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.invalidPassword ? <span style={{ color: "red", "textAlign": "center" }}>Password must have atleast 6 characters</span> : ''}
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" onChange={this.rePasswordChangeHandler} class="form-control" name="repeatPassword" placeholder="Re-Enter Password" />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.passwordMatchError ? <span style={{ color: "red", "textAlign": "center" }}>Passwords doesn't match</span> : ''}
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" onChange={this.locationChangeHandler} class="form-control" name="location" placeholder={this.state.placeholder ? "College Name" : "Location"} required />
-                                </div>
-                                <div class="form-group" style={{ "alignItems": "center" }}>
-                                    {this.state.signupFailedError ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>SignUp Failed. Please try again..</span> : ''}
-                                </div>
-                                <div style={{ textAlign: "center" }}>
-                                    <button disabled={this.validateDetails()} class="btn btn-success" style={{ "width": "100%" }}>Register</button>
-                                </div>
-                                <br />
+                <div class="container" style={{ paddingLeft: "0px", marginLeft: "0px" }}>
+                    <div className="row" >
+                        <div className="col-md-5" style={{ width: "450px", backgroundColor: "1569e0", backgroundColor: "white", height: "520px" }}>
+                            <img src={logo} style={{ width: "450px", height: "520px" }} />
+                        </div>
+                        <div className="col-md-7" style={{
+                            backgroundColor: "white", width: "400px",
+                            border: "0px solid rgb(9, 3, 12)", borderRadius: "5px", paddingLeft: "50px",paddingRight: "50px",paddingTop: "10px", marginLeft: "220px", marginTop: "30px"
+                        }}>
+                            <div class="login-form row">
+                                <div class="main-div">
+                                    <div class="panel">
+                                        <h2 style={{ textAlign: "center" }}>Sign Up</h2>
+                                    </div>
+                                    <div className="row" style={{marginLeft:"35px",marginBottom:"7px"}}>
+                                        <div class="col-md-5 radio-inline">
+                                            <input type="radio" value="student" name="persona"defaultChecked  onChange={this.changePersona} /><p>I'm a Student</p>
+                                        </div>
+                                        <div class="col-md-5 radio-inline">
+                                            <input type="radio" value="company" name="persona" onChange={this.changePersona} /><p>I'm a Company</p>
+                                        </div>
+                                    </div>
+                                    <form onSubmit={this.registerUser}>
+                                        <div class="form-group">
+                                            <input type="text" onChange={this.nameChangeHandler} class="form-control" name="name" placeholder={this.state.placeholder ? "Name" : "Company Name"} required />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" onChange={this.emailChangeHandler} class="form-control" name="email" placeholder="Email Id" required />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.invalidEmail ? <span style={{ color: "red", "textAlign": "center" }}>Invalid Email Id. Please check</span> : ''}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" onChange={this.passwordChangeHandler} class="form-control" name="password" placeholder="Password" required />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.invalidPassword ? <span style={{ color: "red", "textAlign": "center" }}>Password must have atleast 6 characters</span> : ''}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" onChange={this.rePasswordChangeHandler} class="form-control" name="repeatPassword" placeholder="Re-Enter Password" />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.passwordMatchError ? <span style={{ color: "red", "textAlign": "center" }}>Passwords doesn't match</span> : ''}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" onChange={this.locationChangeHandler} class="form-control" name="location" placeholder={this.state.placeholder ? "College Name" : "Location"} required />
+                                        </div>
+                                        <div class="form-group" style={{ "alignItems": "center" }}>
+                                            {this.state.signupFailedError ? <span style={{ color: "red", "font-style": "oblique", "font-weight": "bold", "textAlign": "center" }}>SignUp Failed. Please try again..</span> : ''}
+                                        </div>
+                                        <div style={{ textAlign: "center" }}>
+                                            <button disabled={this.validateDetails()} class="btn btn-success" style={{ "width": "100%" }}>Register</button>
+                                        </div>
+                                        <br />
 
-                                <div style={{ textAlign: "center" }}>
-                                    <Link to="/signin">Already a User? Sign In</Link>
-                                </div>
-                            </form>
-                            <br />
-                            <div>
-                                <Dialog
-                                    open={this.state.signUpSuccessful}
-                                    onClose={this.handleDialogClose}
-                                    aria-labelledby="alert-dialog-title"
-                                    aria-describedby="alert-dialog-description"
-                                >
-                                    <DialogTitle id="alert-dialog-title">{"Registered Successfully .!"}</DialogTitle>
-                                    <DialogContent>
-                                        <DialogContentText id="alert-dialog-description">
-                                            Hey {this.state.name},
-                                            You've been signup succesfully. Please go ahead and login
+                                        <div style={{ textAlign: "center" }}>
+                                            <Link to="/signin">Already a User? Sign In</Link>
+                                        </div>
+                                    </form>
+                                    <br />
+                                    <div>
+                                        <Dialog
+                                            open={this.state.signUpSuccessful}
+                                            onClose={this.handleDialogClose}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"Registered Successfully .!"}</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText id="alert-dialog-description">
+                                                    Hey {this.state.name},
+                                                    You've been signup succesfully. Please go ahead and login
                                         </DialogContentText>
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button onClick={this.handleDialogClose} color="primary" autoFocus>
-                                            Login
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={this.handleDialogClose} color="primary" autoFocus>
+                                                    Login
                                         </Button>
-                                    </DialogActions>
-                                </Dialog>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         )
     }

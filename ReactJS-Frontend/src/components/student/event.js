@@ -27,7 +27,7 @@ class EventDetails extends Component {
     applyForEvent = () => {
         const { match: { params } } = this.props
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/event/' + params.id + '/register', {
+        axios.post(process.env.REACT_APP_BACKEND_URL + 'event/' + params.id + '/register', {
             companyId: this.state.event.company_id,
             studentId: sessionStorage.getItem("id")
         })
@@ -45,7 +45,7 @@ class EventDetails extends Component {
 
     fetchProfile = () => {
         axios.defaults.withCredentials = true;
-        axios.get('http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile')
+        axios.get(process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile')
             .then(response => {
                 if (response.status === 200) {
                     let major = []
@@ -67,7 +67,7 @@ class EventDetails extends Component {
 
     componentDidMount() {
         const { match: { params } } = this.props;
-        let url = 'http://localhost:8080/event/' + params.id + '?studentId=' + sessionStorage.getItem("id");
+        let url = process.env.REACT_APP_BACKEND_URL + 'event/' + params.id + '?studentId=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {

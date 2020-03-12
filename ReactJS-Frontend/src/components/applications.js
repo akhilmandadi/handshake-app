@@ -24,6 +24,7 @@ import Button from '@material-ui/core/Button';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import Card from '@material-ui/core/Card';
 
 const columns = [
     { id: 'student_name', label: 'Student Name', minWidth: 100 },
@@ -63,7 +64,7 @@ class Applications extends Component {
         this.updateJobs();
         const { match: { params } } = this.props;
         axios.defaults.withCredentials = true;
-        axios.get('http://localhost:8080/job/' + params.jobId)
+        axios.get(process.env.REACT_APP_BACKEND_URL + 'job/' + params.jobId)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
@@ -108,7 +109,7 @@ class Applications extends Component {
         this.setState({
             isEditDialogOpen: false
         })
-        axios.put('http://localhost:8080/applications/' + this.state.currentApplicationId, { "status": status })
+        axios.put(process.env.REACT_APP_BACKEND_URL + 'applications/' + this.state.currentApplicationId, { "status": status })
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
@@ -128,7 +129,7 @@ class Applications extends Component {
 
     updateJobs = () => {
         const { match: { params } } = this.props;
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/job/' + params.jobId + '/applicants';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -192,7 +193,7 @@ class Applications extends Component {
         let jobInfoTab = null;
         if (this.state.jobInfo !== {}) {
             jobInfoTab = (
-                <div style={{ borderRadius: "2.5px", padding: "30px", backgroundColor: "white" }}>
+                <Card style={{ borderRadius: "2.5px", padding: "30px", backgroundColor: "white" }}>
                     <Grid container spacing={3}>
                         <div className="container" style={{ width: "25%", marginLeft: "60px" }}><b>Title:</b> {this.state.jobInfo.title}</div>
                         <div className="container" style={{ width: "25%" }}><b>Salary:<span class="glyphicon glyphicon-usd"></span></b>{this.state.jobInfo.salary} per hour</div>
@@ -201,7 +202,7 @@ class Applications extends Component {
                         <div className="container" style={{ width: "25%" }}><b><span class="glyphicon glyphicon-map-marker"></span>Location:</b> {this.state.jobInfo.location}</div>
                         <div className="container" style={{ width: "30%" }}><b><span class="glyphicon glyphicon-time"></span> Posted On: </b> {moment(this.state.jobInfo.posting_date).format("MMMM Do YYYY")}</div>
                     </Grid>
-                </div>
+                </Card>
             )
         }
         let resumeModal = null;
@@ -241,8 +242,8 @@ class Applications extends Component {
                 </Dialog>
                 {createDialog}
                 <div>
-                    <Link to="/company/jobs">
-                        <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "grey" }} onClick={this.toggleCreate} >
+                    <Link to="/company/jobs" style={{textDecoration:"none"}}>
+                        <Fab variant="extended" style={{ alignContent: "right", backgroundColor: "rgb(225, 225, 225)" }} onClick={this.toggleCreate} >
                             <ArrowBackIcon fontSize="large" /><b style={{ fontSize: "10px" }}> Back to All Jobs</b>
                         </Fab>
                     </Link>

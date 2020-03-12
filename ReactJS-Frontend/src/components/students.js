@@ -28,7 +28,7 @@ class Students extends Component {
         this.filterStudentSearch = this.filterStudentSearch.bind(this)
     }
     componentDidMount() {
-        let url = 'http://localhost:8080/student/profiles';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/profiles';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {

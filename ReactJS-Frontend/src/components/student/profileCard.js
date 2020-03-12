@@ -44,7 +44,7 @@ class ProfileCard extends Component {
 
     profileSaveHandler = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             name: this.state.name
@@ -104,7 +104,7 @@ class ProfileCard extends Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.post("http://localhost:8080/students/" + sessionStorage.getItem("id") + "/image", formData, config)
+        axios.post(process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + "/image", formData, config)
             .then((response) => {
                 this.props.fetchStudentDetails();
                 this.setState({

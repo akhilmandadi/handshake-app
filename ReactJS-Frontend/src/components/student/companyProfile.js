@@ -32,7 +32,7 @@ class ViewCompanyProfile extends Component {
 
     fetchCompanyDetails = () => {
         const { match: { params } } = this.props;
-        let url = 'http://localhost:8080/company?id=' + params.companyId;
+        let url = process.env.REACT_APP_BACKEND_URL + 'company?id=' + params.companyId;
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {

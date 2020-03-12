@@ -43,7 +43,7 @@ class CreateJob extends Component {
 
     addJob = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/jobs';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/jobs';
         var data = {
             "title": this.state.title,
             "deadline": this.state.deadline,

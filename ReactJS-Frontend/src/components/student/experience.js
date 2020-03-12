@@ -65,7 +65,7 @@ class Experience extends Component {
 
     saveExperienceChanges = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile';
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile';
         axios.defaults.withCredentials = true;
         axios.put(url, {
             company: this.state.company,
@@ -95,7 +95,7 @@ class Experience extends Component {
 
     deleteExperience = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/student/' + sessionStorage.getItem("id") + '/profile?entity=experience&id=' + this.state.id;
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/' + sessionStorage.getItem("id") + '/profile?entity=experience&id=' + this.state.id;
         axios.defaults.withCredentials = true;
         axios.delete(url)
             .then(response => {

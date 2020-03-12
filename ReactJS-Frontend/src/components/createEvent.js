@@ -42,7 +42,7 @@ class CreateEvent extends Component {
 
     addEvent = (event) => {
         event.preventDefault();
-        let url = 'http://localhost:8080/company/' + sessionStorage.getItem("id") + '/events';
+        let url = process.env.REACT_APP_BACKEND_URL + 'company/' + sessionStorage.getItem("id") + '/events';
         var data = {
             "name": this.state.name,
             "date": this.state.date,

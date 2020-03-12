@@ -20,7 +20,7 @@ class Events extends Component {
         this.filterEventSearch = this.filterEventSearch.bind(this)
     }
     componentDidMount() {
-        let url = 'http://localhost:8080/events';
+        let url = process.env.REACT_APP_BACKEND_URL + 'events';
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {

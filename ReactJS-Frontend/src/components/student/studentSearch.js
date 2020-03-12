@@ -36,7 +36,7 @@ class StudentSearch extends Component {
         this.handleMajorChange = this.handleMajorChange.bind(this)
     }
     componentDidMount() {
-        let url = 'http://localhost:8080/student/profiles?id=' + sessionStorage.getItem("id");
+        let url = process.env.REACT_APP_BACKEND_URL + 'student/profiles?id=' + sessionStorage.getItem("id");
         axios.defaults.withCredentials = true;
         axios.get(url)
             .then(response => {
@@ -163,18 +163,18 @@ class StudentSearch extends Component {
                             <Card style={{ height: "10%", marginBottom: "1px" }}>
                                 <h4 style={{ paddingLeft: "20px" }}>Filters</h4>
                             </Card>
-                            <Card style={{ height: "20%", marginBottom: "1px", paddingBottom: "10px" }}><CardContent>
+                            <Card style={{ height: "27%", marginBottom: "1px", padding: "20px" }}>
                                 <b>Name</b><br />
                                 <input type="text" class="form-control" id="search" aria-describedby="search"
                                     placeholder="Enter a Name" name="name" onChange={this.handleChange} style={{ marginBottom: "50px" }}
                                 />
-                            </CardContent></Card>
-                            <Card style={{ height: "20%", marginBottom: "1px", paddingBottom: "40px" }}><CardContent>
+                            </Card>
+                            <Card style={{ height: "27%", marginBottom: "1px", padding: "20px" }}>
                                 <b>School</b><br />
                                 <input type="text" class="form-control" id="search" aria-describedby="search"
                                     placeholder="Enter a School Name" name="school" onChange={this.handleChange}
                                 />
-                            </CardContent></Card>
+                            </Card>
                             <Card style={{ height: "50%", marginBottom: "1px" }}><CardContent>
                                 <div style={{ marginTop: "10px" }}><b>Major</b></div>
                                 {this.state.majors.map(major => {
