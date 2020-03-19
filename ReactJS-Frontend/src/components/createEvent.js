@@ -80,7 +80,6 @@ class CreateEvent extends Component {
         })
     }
     timeChangeHandler = (event) => {
-        console.log(event.target.value)
         this.setState({
             time: event.target.value
         })
