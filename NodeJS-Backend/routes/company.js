@@ -188,7 +188,7 @@ router.post('/event/:eventId/register', async (request, response) => {
   try {
     const query = 'insert into registrations(id,student_id,company_id,event_id,registered_on) values(?,?,?,?,?)';
     const rows = await pool.query(query, [uuid.generate(), request.body.studentId, request.body.companyId, request.params.eventId, new Date().toISOString().slice(0, 10)]);
-    return response.json(rows[0]).status(200);
+    return response.status(200).json(rows);
   } catch (ex) {
     logger.error(JSON.stringify(ex));
     const message = ex.message ? ex.message : 'Error while fetching event details';

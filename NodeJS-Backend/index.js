@@ -23,7 +23,6 @@ const multer = require('multer');
 const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESS_KEY,
   secretAccessKey: process.env.SECRET_KEY,
-  sessionToken: process.env.SESSION_TOKEN,
 });
 
 const storage = multer.diskStorage({
@@ -90,7 +89,7 @@ app.post('/company/:companyId/job/:jobId/student/:studentId/apply', upload.singl
     if (request.file) {
       const fileContent = fs.readFileSync(`./public/resume/${request.query.id}${path.extname(request.file.originalname)}`);
       const params = {
-        Bucket: 'handshakeimages',
+        Bucket: 'handshake-resume',
         Key: request.query.id + path.extname(request.file.originalname),
         Body: fileContent,
         ContentType: request.file.mimetype,
