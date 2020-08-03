@@ -4,13 +4,13 @@
 
 ## Steps to Setup Application
 
-> **git clone https://akhilmandadi@bitbucket.org/akhilmandadi/handshake-graphql.git**
+> **git clone https://github.com/akhilmandadi/handshake-app.git**
 
-> **cd handshake-graphql/Backend**
+> **cd handshake-app/Backend**
 
 > **npm install**
 
-> **cd ../handshake-graphql/frontend**
+> **cd ../handshake-app/frontend**
 
 > **npm install**
 
@@ -18,8 +18,6 @@
 Set/Export the below Env Variables in your machine
 
 > **REACT_APP_BACKEND_URL** - URL / IP Address of Backend Server
-
-> **MONGO_CONN_URL** - Mongo Connection String
 
 > **PORT** - App runs on 8000 if not specified
 
